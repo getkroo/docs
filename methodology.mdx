@@ -1,0 +1,46 @@
+---
+title: Methodology
+---
+
+Our standard methodology for ingesting API data follows these steps:
+
+1. Fetch raw JSON payloads from the API.
+2. Flatten primary resources into main tables.
+3. Extract nested arrays into separate sub-tables.
+4. Link sub-tables back to main tables using defined join keys.
+
+For example, given this API response for an RFI:
+
+```json
+{
+  "rfi": {
+    "id": "abc",
+    "due_date": "2024-11-22",
+    "status": "open",
+    "logs": [
+      {
+        "created_by": "Jonny",
+        "comment": "test"
+      }
+    ]
+  }
+}
+```
+
+We generate two tables:
+
+**kroo_procore.rfis**
+
+| procore_id (string) | due_date (date) | status (string) |
+|---------------------|-----------------|-----------------|
+| "abc"              | 2024-11-22      | "open"         |
+
+**kroo_procore.rfi_logs**
+
+| created_by (string) | comment (text) | rfi_id (string) |
+|---------------------|----------------|-----------------|
+| "Jonny"            | "test"       | "abc"          |
+
+- The `procore_id` column is mapped from the RFI's `id` field.
+- Nested `logs` entries become rows in the `rfi_logs` sub-table.
+- The `rfi_id` column in the sub-table links back to the main RFI record.

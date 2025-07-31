@@ -1,0 +1,10 @@
+.navbar-logo img {
+  max-height: 64px;
+}
+
+/* Ensure alt text sizing and preserve aspect ratio */
+.navbar-logo img {
+  width: auto;
+  height: auto;
+  max-height: 64px;
+}
