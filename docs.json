@@ -21,7 +21,20 @@
           {
             "group": "How Kroo Works",
             "pages": [
-              "methodology"
+              "methodology",
+              "historical-backfill",
+              "record-deletion"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Troubleshooting",
+        "groups": [
+          {
+            "group": "Data Freshness",
+            "pages": [
+              "manual-refresh"
             ]
           }
         ]

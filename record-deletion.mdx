@@ -1,0 +1,7 @@
+---
+title: Record Deletion
+---
+
+Kroo operates using a soft-delete methodology and it is enabled by default for all integrations. When records are deleted in the source system, they are not physically removed from the warehouse. Instead, they are marked as deleted using a database flag, typically a column such as `_deleted`.
+
+This approach ensures data integrity and allows for historical tracking of records, even after deletion in the source system.

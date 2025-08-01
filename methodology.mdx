@@ -1,6 +1,8 @@
 ---
-title: Methodology
+title: Data Modeling & API Sync
 ---
+
+## Table Generation from API Data
 
 Our standard methodology for ingesting API data follows these steps:
 
@@ -44,3 +46,13 @@ We generate two tables:
 - The `procore_id` column is mapped from the RFI's `id` field.
 - Nested `logs` entries become rows in the `rfi_logs` sub-table.
 - The `rfi_id` column in the sub-table links back to the main RFI record.
+
+## Sync Efficiency & System Load Management
+
+Kroo employs several strategies to maximize efficiency and minimize load on source systems:
+
+- **Client-Side Rate Limits with Back-Off:** Where possible, Kroo utilizes client-side rate limits with back-off strategies. This approach helps maximize data sync efficiency while respecting the availability and rate limits imposed by the source system.
+
+- **Incremental Refresh:** Kroo leverages incremental refresh to update only new or changed data, reducing the amount of data transferred and minimizing the load on both the source system and the warehouse.
+
+These methodologies ensure reliable, efficient, and scalable data integration.
