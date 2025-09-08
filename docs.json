@@ -49,9 +49,9 @@
     "global": {
       "anchors": [
         {
-          "name": "Support",
+          "anchor": "Support",
           "icon": "envelope",
-          "url": "mailto:implementations@getkroo.com"
+          "href": "mailto:implementations@getkroo.com"
         }
       ]
     }
