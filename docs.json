@@ -16,12 +16,17 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Getting Started",
         "groups": [
           {
-            "group": "How Kroo Works",
+            "group": "Understanding Kroo",
             "pages": [
-              "methodology",
+              "methodology"
+            ]
+          },
+          {
+            "group": "Data Management",
+            "pages": [
               "historical-backfill",
               "record-deletion"
             ]
@@ -29,11 +34,12 @@
         ]
       },
       {
-        "tab": "Troubleshooting",
+        "tab": "Data Operations",
         "groups": [
           {
-            "group": "Data Freshness",
+            "group": "Monitoring & Maintenance",
             "pages": [
+              "pipeline-status",
               "manual-refresh"
             ]
           }
@@ -41,7 +47,13 @@
       }
     ],
     "global": {
-      "anchors": []
+      "anchors": [
+        {
+          "name": "Support",
+          "icon": "envelope",
+          "url": "mailto:implementations@getkroo.com"
+        }
+      ]
     }
   },
   "logo": {

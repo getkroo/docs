@@ -1,18 +1,39 @@
 ---
-title: Data Modeling & API Sync
+title: "How Kroo Works"
+description: "Understanding Kroo's data modeling approach and sync methodology for construction data integration."
 ---
 
-## Table Generation from API Data
+## Overview
 
-Our standard methodology for ingesting API data follows these steps:
+Kroo transforms complex construction API data into clean, queryable tables in your data warehouse. This page explains our data modeling methodology and sync strategies.
 
-1. Fetch raw JSON payloads from the API.
-2. Flatten primary resources into main tables.
-3. Extract nested arrays into separate sub-tables.
-4. Link sub-tables back to main tables using defined join keys.
+## Data Modeling Approach
 
-For example, given this API response for an RFI:
+### The Four-Step Process
 
+<Steps>
+<Step title="Fetch Raw Data">
+Retrieve complete JSON payloads from your construction management APIs
+</Step>
+
+<Step title="Flatten Main Resources">
+Convert primary objects (RFIs, change orders, etc.) into main database tables
+</Step>
+
+<Step title="Extract Nested Data">
+Transform nested arrays and objects into separate sub-tables
+</Step>
+
+<Step title="Create Relationships">
+Link sub-tables back to main tables using defined join keys for easy querying
+</Step>
+</Steps>
+
+### Real Example: RFI Data Transformation
+
+Here's how we process a typical RFI response from Procore:
+
+**Source API Response:**
 ```json
 {
   "rfi": {
@@ -29,30 +50,84 @@ For example, given this API response for an RFI:
 }
 ```
 
-We generate two tables:
+**Generated Tables:**
 
-**kroo_procore.rfis**
-
+<Tabs>
+<Tab title="Main Table: kroo_procore.rfis">
 | procore_id (string) | due_date (date) | status (string) |
 |---------------------|-----------------|-----------------|
 | "abc"              | 2024-11-22      | "open"         |
+</Tab>
 
-**kroo_procore.rfi_logs**
-
+<Tab title="Sub-table: kroo_procore.rfi_logs">
 | created_by (string) | comment (text) | rfi_id (string) |
 |---------------------|----------------|-----------------|
 | "Jonny"            | "test"       | "abc"          |
+</Tab>
+</Tabs>
 
-- The `procore_id` column is mapped from the RFI's `id` field.
-- Nested `logs` entries become rows in the `rfi_logs` sub-table.
-- The `rfi_id` column in the sub-table links back to the main RFI record.
+**Key Relationships:**
+- `procore_id` in the main table comes from the API's `id` field
+- `rfi_id` in the sub-table links back to the main RFI record
+- This structure enables easy JOINs for comprehensive reporting
 
-## Sync Efficiency & System Load Management
+<Info>
+**Why This Approach?** This methodology ensures your data warehouse follows relational database best practices while maintaining all the rich detail from your construction management systems.
+</Info>
 
-Kroo employs several strategies to maximize efficiency and minimize load on source systems:
+## Sync Efficiency & Performance
 
-- **Client-Side Rate Limits with Back-Off:** Where possible, Kroo utilizes client-side rate limits with back-off strategies. This approach helps maximize data sync efficiency while respecting the availability and rate limits imposed by the source system.
+### Smart Sync Strategies
 
-- **Incremental Refresh:** Kroo leverages incremental refresh to update only new or changed data, reducing the amount of data transferred and minimizing the load on both the source system and the warehouse.
+Kroo uses several optimization techniques to ensure reliable, efficient data integration:
 
-These methodologies ensure reliable, efficient, and scalable data integration.
+<CardGroup cols={2}>
+<Card title="Rate Limiting" icon="gauge-high">
+**Client-side rate limits with back-off**
+- Respects source system availability
+- Maximizes sync efficiency
+- Prevents API overload
+</Card>
+
+<Card title="Incremental Updates" icon="arrow-rotate-right">
+**Only sync what's changed**
+- Reduces data transfer volume
+- Minimizes warehouse load
+- Faster sync completion times
+</Card>
+</CardGroup>
+
+### System Load Management
+
+Our approach minimizes impact on your source systems:
+
+- **Intelligent scheduling** during low-usage periods
+- **Gradual back-off** when systems are under load  
+- **Monitoring and alerts** for sync health
+- **Error recovery** with automatic retry logic
+
+<Info>
+**Result:** Your construction management systems continue running smoothly while Kroo keeps your data warehouse up-to-date with the latest project information.
+</Info>
+
+## Data Quality Assurance
+
+### Validation & Consistency
+
+Every sync includes:
+- **Schema validation** against expected data structures
+- **Data type checking** for consistency
+- **Relationship integrity** between main and sub-tables
+- **Duplicate detection** and handling
+
+### Monitoring & Alerts
+
+Track data health with:
+- Pipeline sync status monitoring
+- Data freshness alerts
+- Error notifications and resolution
+- Performance metrics and trends
+
+<Card title="Next Steps" icon="arrow-right">
+Ready to monitor your data pipelines? Check out our [Pipeline Status Monitoring](/pipeline-status) guide to set up real-time dashboards.
+</Card>

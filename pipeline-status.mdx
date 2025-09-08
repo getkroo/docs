@@ -1,0 +1,192 @@
+---
+title: "Pipeline Status Monitoring"
+description: "Monitor data pipeline sync times using the Pipeline Status API and integrate with PowerBI for real-time dashboards."
+---
+
+## Overview
+
+The Pipeline Status API helps you monitor the health and freshness of your Kroo data pipelines. Use it to:
+
+- **Track data freshness** - See when each pipeline last synced data
+- **Identify sync issues** - Spot pipelines that haven't updated recently  
+- **Create dashboards** - Build PowerBI reports for real-time monitoring
+- **Set up alerts** - Get notified when data becomes stale
+
+<Info>
+This is particularly useful for data engineers and project managers who need to ensure critical construction data is up-to-date for reporting and decision-making.
+</Info>
+
+## Quick Start
+
+### Get Your API Credentials
+
+<Steps>
+<Step title="Log into Kroo">
+Access your Kroo application with your regular login
+</Step>
+
+<Step title="Navigate to Company Settings">
+Go to **Settings > Company** in the Kroo App
+</Step>
+
+<Step title="Copy API Credentials">
+Find your Basic Auth credentials (username and password) and copy them for use in API calls
+</Step>
+</Steps>
+
+### Test Your Connection
+
+Try this quick test to see your available data partners:
+
+<Tabs>
+<Tab title="Windows (PowerShell)">
+```powershell
+Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status/describe' `
+-Method GET `
+-Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
+```
+</Tab>
+<Tab title="Windows (Command Prompt)">
+```cmd
+curl --location "https://api.getkroo.com/api/v1/pipeline_status/describe" ^
+--header "Authorization: Basic [YOUR_CREDENTIALS]"
+```
+</Tab>
+<Tab title="Mac/Linux">
+```bash
+curl --location 'https://api.getkroo.com/api/v1/pipeline_status/describe' \
+--header 'Authorization: Basic [YOUR_CREDENTIALS]'
+```
+</Tab>
+</Tabs>
+
+**Expected Response:**
+```json
+{
+    "partners": [
+        "procore",
+        "cmic"
+    ]
+}
+```
+
+## API Reference
+
+### Get Available Partners
+**Endpoint:** `GET /api/v1/pipeline_status/describe`
+
+Discover which data integration partners are configured in your Kroo instance.
+
+### Get Pipeline Status
+**Endpoint:** `GET /api/v1/pipeline_status?partner={partner_name}`
+
+Retrieve the last sync timestamp for all pipelines from a specific partner.
+
+<Tabs>
+<Tab title="Windows (PowerShell)">
+```powershell
+Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore' `
+-Method GET `
+-Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
+```
+</Tab>
+<Tab title="Windows (Command Prompt)">
+```cmd
+curl --location "https://api.getkroo.com/api/v1/pipeline_status?partner=procore" ^
+--header "Authorization: Basic [YOUR_CREDENTIALS]"
+```
+</Tab>
+<Tab title="Mac/Linux">
+```bash
+curl --location 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore' \
+--header 'Authorization: Basic [YOUR_CREDENTIALS]'
+```
+</Tab>
+</Tabs>
+
+**Sample Response:**
+```json
+{
+    "procore_commitment_change_orders": "2025-09-07T23:02:36.395-07:00",
+    "procore_vendors": "2025-09-08T07:02:21.876-07:00",
+    "procore_direct_costs": "2025-09-07T21:03:10.634-07:00",
+    "procore_rfis": "2025-09-07T21:03:10.634-07:00",
+    "procore_submittals": "2025-09-07T20:02:38.802-07:00",
+    "procore_change_order_requests": "2025-09-07T19:02:31.892-07:00",
+    "procore_wbs_codes": null,
+    "procore_cost_codes": null
+}
+```
+
+<Info>
+**Understanding the Response:**
+- Timestamps show the last successful sync in ISO 8601 format
+- `null` values indicate pipelines that haven't synced yet or are disabled
+- All times include timezone information for accurate tracking
+</Info>
+
+## PowerBI Dashboard Setup
+
+Create a real-time pipeline monitoring dashboard in PowerBI:
+
+<Steps>
+<Step title="Connect to the API">
+1. Open **PowerBI Desktop** and create a new report
+2. Click **Get Data** > **Web**  
+3. Enter URL: `https://api.getkroo.com/api/v1/pipeline_status?partner=procore`
+4. Select **Basic** authentication and enter your Kroo credentials
+</Step>
+
+<Step title="Transform the Data">
+In Power Query Editor:
+1. **Convert to Table** - Click **Convert > To Table**
+2. **Expand Columns** - Select **Name** and **Value** columns
+3. **Rename Columns** - Change to "Pipeline" and "Last Sync Time"
+4. **Set Data Types** - Text for Pipeline, Date/Time for Last Sync Time
+5. **Remove Nulls** - Filter out rows with null sync times
+6. Click **Close & Apply**
+</Step>
+
+<Step title="Build Visualizations">
+Create useful charts and tables:
+- **Status Table** - All pipelines with sync times
+- **Freshness Cards** - Show oldest/newest sync times  
+- **Alert Visuals** - Highlight stale data (>24 hours old)
+- **Timeline Charts** - Track sync patterns over time
+</Step>
+
+<Step title="Enable Auto-Refresh">
+1. Publish to PowerBI Service
+2. Go to **Settings > Scheduled refresh**
+3. Set refresh frequency (hourly recommended)
+4. Configure failure notifications
+</Step>
+</Steps>
+
+## Common Use Cases
+
+### Monitoring Critical Pipelines
+Set up alerts for business-critical data:
+
+```
+Daily Pipelines → Alert if >25 hours stale
+Hourly Pipelines → Alert if >2 hours stale  
+Real-time Pipelines → Alert if >30 minutes stale
+```
+
+### Operations Dashboard
+Create executive dashboards showing:
+- Overall data health status
+- Pipeline performance trends
+- Integration partner reliability
+- Data availability for key reports
+
+### Troubleshooting Data Issues
+When reports show unexpected data:
+1. Check pipeline status to identify sync delays
+2. Compare sync times across related pipelines
+3. Coordinate with Kroo support using specific pipeline names and timestamps
+
+<Info>
+**Pro Tip:** Bookmark your PowerBI dashboard and check it before running important reports to ensure you're working with fresh data.
+</Info>

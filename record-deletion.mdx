@@ -1,7 +1,163 @@
 ---
-title: Record Deletion
+title: "Data Retention & Soft Deletes"
+description: "Understanding how Kroo handles deleted records and maintains data integrity in your warehouse."
 ---
 
-Kroo operates using a soft-delete methodology and it is enabled by default for all integrations. When records are deleted in the source system, they are not physically removed from the warehouse. Instead, they are marked as deleted using a database flag, typically a column such as `_deleted`.
+## Overview
 
-This approach ensures data integrity and allows for historical tracking of records, even after deletion in the source system.
+Kroo uses a **soft-delete methodology** to handle records that are deleted in your source construction management systems. This approach prioritizes data integrity and historical tracking over immediate data removal.
+
+## How Soft Deletes Work
+
+When a record is deleted in your source system (like Procore), Kroo:
+
+<Steps>
+<Step title="Detects the Deletion">
+During the next sync cycle, Kroo identifies that the record no longer exists in the source system
+</Step>
+
+<Step title="Marks as Deleted">
+Instead of removing the record, Kroo adds a deletion flag (typically `_deleted = true`)
+</Step>
+
+<Step title="Preserves Historical Data">
+The record remains in your warehouse with all original data intact, just flagged as deleted
+</Step>
+
+<Step title="Maintains Relationships">
+Related records and foreign key relationships remain functional for historical analysis
+</Step>
+</Steps>
+
+## Database Implementation
+
+### Deletion Flags
+
+Soft-deleted records are identified by special columns:
+
+<Tabs>
+<Tab title="Standard Flag">
+```sql
+-- Most common implementation
+SELECT * FROM kroo_procore.rfis 
+WHERE _deleted IS NULL OR _deleted = FALSE;
+```
+</Tab>
+
+<Tab title="Timestamp Flag">
+```sql
+-- Some tables may include deletion timestamps
+SELECT * FROM kroo_procore.change_orders 
+WHERE _deleted_at IS NULL;
+```
+</Tab>
+</Tabs>
+
+### Querying Active Records
+
+To get only active (non-deleted) records in your queries:
+
+```sql
+-- Example: Get active RFIs only
+SELECT 
+    procore_id,
+    due_date,
+    status,
+    created_date
+FROM kroo_procore.rfis 
+WHERE (_deleted IS NULL OR _deleted = FALSE)
+AND status = 'open';
+```
+
+<Info>
+**Pro Tip:** Many BI tools and data visualization platforms can automatically filter out soft-deleted records by adding `WHERE _deleted IS NULL` to your base queries.
+</Info>
+
+## Benefits of Soft Deletes
+
+<CardGroup cols={2}>
+<Card title="Data Integrity" icon="shield-check">
+Historical reports remain accurate even when source records are deleted
+</Card>
+
+<Card title="Audit Trail" icon="file-text">
+Track what was deleted and when for compliance and debugging
+</Card>
+
+<Card title="Relationship Preservation" icon="link">
+Foreign key relationships stay intact for historical analysis
+</Card>
+
+<Card title="Recovery Capability" icon="arrow-rotate-left">
+Accidentally deleted data can be identified and addressed
+</Card>
+</CardGroup>
+
+## Working with Soft Deletes
+
+### In Your Reports
+
+When building reports or dashboards:
+
+1. **Default to Active Records**: Filter out deleted records unless specifically analyzing deletions
+2. **Historical Analysis**: Include deleted records when analyzing trends over time
+3. **Data Validation**: Use deletion flags to identify data quality issues
+
+### In Your Queries
+
+<Tabs>
+<Tab title="Active Records Only">
+```sql
+-- Standard query for current data
+SELECT project_name, total_budget
+FROM kroo_procore.projects
+WHERE _deleted IS NULL
+```
+</Tab>
+
+<Tab title="Include Deleted Records">
+```sql
+-- Historical analysis including deleted records
+SELECT 
+    project_name, 
+    total_budget,
+    CASE WHEN _deleted THEN 'Deleted' ELSE 'Active' END as status
+FROM kroo_procore.projects
+```
+</Tab>
+
+<Tab title="Deletion Analysis">
+```sql
+-- Analyze deletion patterns
+SELECT 
+    DATE(updated_at) as deletion_date,
+    COUNT(*) as records_deleted
+FROM kroo_procore.rfis
+WHERE _deleted = TRUE
+GROUP BY DATE(updated_at)
+ORDER BY deletion_date DESC
+```
+</Tab>
+</Tabs>
+
+## Important Considerations
+
+<CardGroup cols={1}>
+<Card title="Query Performance" icon="gauge-high">
+Always include `WHERE _deleted IS NULL` in your queries to maintain optimal performance and avoid including unwanted deleted records.
+</Card>
+
+<Card title="Storage Impact" icon="hard-drive">
+Soft deletes mean your warehouse retains all historical data. Monitor storage usage and work with your team on data archival strategies if needed.
+</Card>
+
+<Card title="Data Privacy" icon="user-shield">
+Soft-deleted records containing sensitive information are still present in your warehouse. Consider this for GDPR and other privacy compliance requirements.
+</Card>
+</CardGroup>
+
+## Need Help?
+
+<Card title="Questions About Data Retention?" icon="question-circle">
+Contact your implementation team at [implementations@getkroo.com](mailto:implementations@getkroo.com) to discuss data retention policies or custom deletion handling requirements.
+</Card>
