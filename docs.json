@@ -30,6 +30,12 @@
               "historical-backfill",
               "record-deletion"
             ]
+          },
+          {
+            "group": "SQL & Analytics",
+            "pages": [
+              "sql-views-and-basics"
+            ]
           }
         ]
       },

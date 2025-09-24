@@ -1,0 +1,578 @@
+---
+title: "SQL Views and Basics"
+description: "Complete guide to SQL views in Kroo: from basic concepts to advanced cross-system reporting with best practices and real-world examples."
+---
+
+## Overview
+
+SQL views are the backbone of effective data analysis in Kroo. They transform raw, messy tables into structured, standardized, business-ready datasets that anyone can query. This comprehensive guide covers everything from basic concepts to advanced implementation strategies.
+
+## What Is a SQL View?
+
+A **SQL View** is a saved query that turns raw, messy tables into a structured, standardized, business-ready dataset inside your Kroo Warehouse. Instead of rewriting the same joins and filters, a view stores the logic as a virtual table that anyone can query.
+
+<Info>
+**Think of it like a recipe:** The raw ingredients (tables) are available in your warehouse, but the view is the finished dish—measured, mixed, and ready to serve.
+</Info>
+
+### Views Can:
+
+- **Select only the fields you care about** - No more overwhelming spreadsheets
+- **Aggregate values** (SUM, AVG, COUNT, etc.) to roll data up to the right level
+- **Join across tables** to connect information that lives in different places
+
+### Where Views Can Be Used
+
+<Tabs>
+<Tab title="Within a Single Schema">
+**Shape a single system into clean tables**
+
+Example: Transform Procore data into clean tables for RFIs, Submittals, and Change Orders
+
+```sql
+CREATE VIEW kroo_procore_reporting.clean_rfis AS
+SELECT
+    rfi_id,
+    project_name,
+    CASE WHEN status = 'O' THEN 'Open'
+         WHEN status = 'C' THEN 'Closed'
+    END AS rfi_status
+FROM kroo_procore.rfis
+WHERE _deleted = 0  -- Essential filter for all Kroo queries
+```
+</Tab>
+
+<Tab title="Across Multiple Schemas">
+**Unite multiple systems for comprehensive insights**
+
+Example: Join Procore + Viewpoint Vista to create unified project financial view
+
+```sql
+CREATE VIEW kroo_reporting.project_financial_unified AS
+SELECT
+    p.project_name,
+    p.total_contract_value,
+    v.jtd_cost
+FROM kroo_procore.projects p
+LEFT JOIN kroo_viewpoint_vista.jcjm v
+    ON p.project_number = v.job
+```
+</Tab>
+</Tabs>
+
+<Card title="Key Takeaway" icon="lightbulb">
+**Views act as the glue between systems,** turning siloed construction data into a single source of truth.
+</Card>
+
+## Why Views Matter in Kroo
+
+<CardGroup cols={2}>
+<Card title="Simplify Complexity" icon="wand-magic-sparkles">
+**Abstract away technical details**
+- Users don't need to know which raw tables to query
+- Logic is centralized and reusable
+- Reduces learning curve for analysts
+</Card>
+
+<Card title="Ensure Consistency" icon="shield-check">
+**Standardize business definitions**
+- How Committed Cost is calculated
+- How Percent Complete is defined
+- Every report uses the same logic
+</Card>
+
+<Card title="Boost Performance" icon="rocket">
+**Optimize query execution**
+- Predefined logic reduces repeated heavy queries
+- Streamlines dashboard refreshes
+- Better resource utilization
+</Card>
+
+<Card title="Integration Ready" icon="plug">
+**Connect to any tool instantly**
+- Power BI, Tableau, Kroo Data Visualizer
+- End-users see insights, not raw data
+- Self-service analytics enabled
+</Card>
+</CardGroup>
+
+## Advantages of Using Views
+
+### 1. Data Customization
+
+Translate raw system codes into business-friendly values that make sense to your team.
+
+```sql
+CASE WHEN status = 'IA' THEN 'Invoice Approved'
+     WHEN status = 'P' THEN 'Pending Review'
+     WHEN status = 'R' THEN 'Rejected'
+END AS invoice_status
+```
+
+<Info>
+**Business Value:** Views eliminate the need to remember cryptic system codes and provide consistent, readable data across all reports.
+</Info>
+
+### 2. Data Aggregation
+
+Summarize key numbers once and standardize calculations across your organization.
+
+```sql
+SELECT
+    DATEPART(month, invoice_date) AS month,
+    SUM(contract_value)
+    + SUM(change_orders)
+    - SUM(costs) AS net_value
+FROM kroo_procore.invoices
+WHERE invoice_date BETWEEN '2025-09-01' AND '2025-09-30'
+    AND _deleted = 0  -- Always filter deleted records
+GROUP BY DATEPART(month, invoice_date)
+```
+
+<CardGroup cols={2}>
+<Card title="Consistency" icon="check-circle">
+**Standardized calculations**
+- Single source of truth for metrics
+- Eliminates calculation errors
+- Ensures consistent reporting
+</Card>
+
+<Card title="Efficiency" icon="gauge-high">
+**Compute once, use everywhere**
+- Reduces query complexity
+- Improves report performance
+- Simplifies downstream analysis
+</Card>
+</CardGroup>
+
+### 3. Cross-System Reporting
+
+Merge operational project data from Vista with financials from Procore for comprehensive insights.
+
+```sql
+SELECT v.job, p.project_name, p.total_contract_value,
+       v.jtd_cost
+FROM kroo_viewpoint_vista.jcjm v
+LEFT JOIN kroo_procore.projects p
+    ON v.job = p.project_number
+```
+
+<Info>
+**Integration Power:** Views enable seamless data integration between different construction management systems, providing a unified view of project performance.
+</Info>
+
+## How Views Fit in Your Data Architecture
+
+Views act as the critical bridge in your Kroo data pipeline, connecting your warehouse schemas to visualization tools:
+
+<Frame caption="SQL Views aggregate data from multiple schemas and feed clean datasets to your BI tools">
+  <img src="/images/sql-view-architecture.png" alt="SQL View Architecture showing data flow from Kroo Warehouse through schemas to views and finally to Power BI and Kroo Data Visualizer" />
+</Frame>
+
+<Info>
+**Key Insight:** Views aggregate data from multiple schemas (s1.t1, s1.t2, s2.t1, s2.t2) using functions like SUM and AVG, then feed clean, business-ready datasets directly to your visualization tools like Power BI and Kroo Data Visualizer.
+</Info>
+
+## Essential Kroo Query Requirements
+
+<Warning>
+**Critical:** Every Kroo query MUST include `WHERE _deleted = 0` to filter out soft-deleted records. This is essential for accurate data and is required in all production views.
+</Warning>
+
+### The `_deleted` Filter Explained
+
+Kroo uses soft deletes to maintain data integrity. When records are "deleted" in source systems, they're marked with `_deleted = 1` rather than being physically removed. Always filter these out:
+
+```sql
+-- ✅ Correct - Always include this filter
+SELECT project_name, contract_amount
+FROM kroo_procore.projects
+WHERE _deleted = 0
+
+-- ❌ Wrong - Will include deleted records
+SELECT project_name, contract_amount
+FROM kroo_procore.projects
+```
+
+## SQL Query Building Blocks
+
+Understanding the core SQL components will help you build effective views. Think of these as the essential ingredients in your data recipe.
+
+### The Core Building Blocks
+
+<Steps>
+<Step title="SELECT - What You Want">
+Choose the columns and metrics you need for your analysis
+
+```sql
+SELECT project_id, SUM(contract_amount) AS total_contract
+```
+</Step>
+
+<Step title="FROM - Where It Lives">
+Specify the source table(s) containing your data
+
+```sql
+FROM kroo_procore.change_orders
+```
+</Step>
+
+<Step title="JOIN - Connect Related Tables">
+Link tables together to combine related information
+
+**Common Join Types:**
+- `INNER JOIN` → Only matches
+- `LEFT JOIN` → Keep all from left + matches on right
+- `FULL OUTER JOIN` → Everything, matched or not
+
+```sql
+LEFT JOIN kroo_procore.projects p
+    ON co.project_id = p.procore_id
+```
+</Step>
+
+<Step title="WHERE - Narrow It Down">
+Filter rows to include only the data you need
+
+```sql
+WHERE status = 'Approved' AND _deleted = 0
+```
+</Step>
+
+<Step title="GROUP BY - Roll Up">
+Aggregate data into meaningful categories
+
+```sql
+GROUP BY project_id
+```
+</Step>
+
+<Step title="ORDER BY - Sort Results">
+Organize output in a logical sequence
+
+```sql
+ORDER BY total_contract DESC
+```
+</Step>
+</Steps>
+
+### Complete View Example
+
+Here's how all the pieces come together in a real view:
+
+```sql
+CREATE OR REPLACE VIEW
+kroo_procore_reporting.vw_project_change_order_summary AS
+
+SELECT
+    p.project_id,
+    p.project_name,
+    COUNT(co.procore_id) AS change_order_count,
+    SUM(co.contract_amount) AS total_contract_amount
+FROM kroo_procore.change_orders co
+JOIN kroo_procore.projects p
+    ON co.project_id = p.procore_id
+WHERE co.status = 'Approved'
+    AND co._deleted = 0
+GROUP BY p.project_id, p.project_name
+ORDER BY total_contract_amount DESC;
+```
+
+## Best Practices
+
+### A. Query Writing & Readability
+
+<CardGroup cols={1}>
+<Card title="Formatting Standards" icon="code">
+Follow these formatting rules for maintainable code:
+- Use **uppercase SQL keywords** (SELECT, JOIN, WHERE)
+- **Indent and line-break** for clarity
+- **Avoid SELECT \*:** Specify exact columns
+- **Meaningful aliases:** Use short but clear names (p for projects, not x)
+- **Comment business logic:** Document filters and calculations
+</Card>
+</CardGroup>
+
+**Example of Well-Formatted Query:**
+
+```sql
+SELECT
+    p.project_id,
+    p.project_name,
+    i.invoice_amount
+FROM kroo_procore.projects p
+JOIN kroo_procore.invoices i
+    ON p.project_id = i.project_id
+-- Only include approved invoices
+WHERE i.status = 'Approved'
+```
+
+### B. Performance & Efficiency
+
+<Steps>
+<Step title="Filter Early">
+Apply WHERE clauses before joins when possible to reduce data processing
+</Step>
+
+<Step title="Join on IDs">
+Use numeric IDs or surrogate keys, not text fields for better performance
+</Step>
+
+<Step title="Aggregate Once">
+Perform aggregations in SQL rather than repeatedly downstream
+</Step>
+</Steps>
+
+**Performance Example:**
+
+```sql
+SELECT
+    p.project_id,
+    SUM(i.invoice_amount) AS total_invoices
+FROM kroo_procore.projects p
+JOIN kroo_procore.invoices i
+    ON p.project_id = i.project_id
+WHERE i.status = 'Approved'
+GROUP BY p.project_id
+```
+
+<Warning>
+**Avoid This:** Don't join on Project_Name → Join on Project_ID instead for optimal performance.
+</Warning>
+
+### C. Data Integrity & Accuracy
+
+Ensure your views produce reliable, accurate results:
+
+<Tabs>
+<Tab title="Handle Duplicates">
+Use DISTINCT or proper grouping to prevent duplicate records:
+
+```sql
+SELECT DISTINCT project_id, project_name
+FROM kroo_procore.projects
+```
+</Tab>
+
+<Tab title="Manage NULLs">
+Apply COALESCE or ISNULL to handle missing values:
+
+```sql
+SELECT
+    project_id,
+    COALESCE(SUM(invoice_amount), 0.00) AS total_invoices
+FROM kroo_procore.invoices
+GROUP BY project_id
+```
+</Tab>
+
+<Tab title="Correct Data Types">
+Use appropriate data types for different value types:
+- **Decimals** for monetary values
+- **Integers** for counts
+- **Dates** for timelines
+</Tab>
+</Tabs>
+
+### D. Naming & Organization
+
+<CardGroup cols={2}>
+<Card title="Clear View Names" icon="tag">
+**Use descriptive names**
+- `project_financial_summary` ✅
+- `pfs` ❌
+</Card>
+
+<Card title="Schema Placement" icon="folder">
+**Organize by purpose**
+- System-specific views: `kroo_<system_name>_reporting`
+- Cross-system views: `kroo_reporting`
+</Card>
+</CardGroup>
+
+**Naming Example:**
+
+```sql
+CREATE VIEW kroo_reporting.project_financial_summary AS
+SELECT ...
+```
+
+## Where to Create Views
+
+Choose the right location based on your view's purpose and lifecycle:
+
+<Steps>
+<Step title="SQL Scripts">
+**Temporary views for SSMS testing**
+- Use for development and experimentation
+- Delete after testing is complete
+</Step>
+
+<Step title="Production Views">
+**Save in correct schema for permanent use**
+- `kroo_<system_name>_reporting` for system-specific views
+- Example: `kroo_procore_reporting`, `kroo_p6_reporting`
+</Step>
+
+<Step title="Cross-System Reporting">
+**Place under kroo_reporting for integration views**
+- Combines data from multiple source systems
+- Accessible across different schemas
+</Step>
+</Steps>
+
+**Schema Creation Example:**
+
+```sql
+CREATE SCHEMA kroo_p6_reporting;
+GO
+
+CREATE VIEW kroo_p6_reporting.p6_cmic_summary AS
+SELECT ...
+```
+
+<Info>
+**Organization Tip:** Consistent schema organization makes it easier for your team to find and maintain views over time.
+</Info>
+
+## Connecting to Your Data Warehouse
+
+Once your views are created, you can connect to them using various tools. Here's how to access your Kroo warehouse:
+
+### Connection Setup
+
+<Steps>
+<Step title="Navigate to Infrastructure">
+In your Kroo dashboard, click on the **Infrastructure** tab to see your available resources
+</Step>
+
+<Step title="Access Connection Details">
+Find your **Azure SQL Warehouse** (status will show as "Running") and click **Connection details**
+</Step>
+
+<Step title="Configure SQL Server Connection">
+When connecting via SQL Server Management Studio or similar tools, use these settings:
+
+**Login Tab:**
+- **Server type:** Database Engine
+- **Server name:** Your provided server name (format: `kroo-sql-[identifier].database.windows.net`)
+- **Authentication:** SQL Server Authentication
+- **Login:** Your provided login credentials
+- **Password:** Your provided password
+- ☑️ **Remember password** (optional)
+
+**Connection Properties Tab:**
+- **Connection Security:** Mandatory
+- **Encryption:** Mandatory
+- ☑️ **Trust server certificate**
+</Step>
+
+<Step title="Connect Your Analytics Tools">
+Use these same connection details in Power BI, Tableau, or other BI tools to access your views directly
+</Step>
+</Steps>
+
+<Info>
+**Connection String Format:** Your server name will typically follow the pattern `kroo-sql-[unique-identifier].database.windows.net` - use exactly as provided in your connection details.
+</Info>
+
+## Advanced View Patterns
+
+### Monthly Financial Summaries
+
+Create rolling monthly reports with standardized date handling:
+
+```sql
+CREATE VIEW kroo_reporting.monthly_financial_summary AS
+SELECT
+    YEAR(invoice_date) AS year,
+    MONTH(invoice_date) AS month,
+    DATENAME(MONTH, invoice_date) AS month_name,
+    SUM(contract_value + ISNULL(change_orders, 0)) AS gross_revenue,
+    SUM(costs) AS total_costs,
+    SUM(contract_value + ISNULL(change_orders, 0) - costs) AS net_margin
+FROM kroo_procore.invoices
+WHERE _deleted = 0
+GROUP BY YEAR(invoice_date), MONTH(invoice_date), DATENAME(MONTH, invoice_date)
+```
+
+### Project Health Dashboard
+
+Combine multiple metrics into a single project health view:
+
+```sql
+CREATE VIEW kroo_reporting.project_health_dashboard AS
+SELECT
+    p.project_id,
+    p.project_name,
+    p.project_status,
+    COALESCE(SUM(co.contract_amount), 0) AS total_change_orders,
+    COUNT(CASE WHEN rfi.status = 'Open' THEN 1 END) AS open_rfis,
+    DATEDIFF(DAY, p.start_date, GETDATE()) AS project_age_days,
+    CASE
+        WHEN COUNT(CASE WHEN rfi.status = 'Open' THEN 1 END) > 5 THEN 'High Risk'
+        WHEN COUNT(CASE WHEN rfi.status = 'Open' THEN 1 END) > 2 THEN 'Medium Risk'
+        ELSE 'Low Risk'
+    END AS risk_level
+FROM kroo_procore.projects p
+LEFT JOIN kroo_procore.change_orders co ON p.procore_id = co.project_id
+LEFT JOIN kroo_procore.rfis rfi ON p.procore_id = rfi.project_id
+WHERE p._deleted = 0
+GROUP BY p.project_id, p.project_name, p.project_status, p.start_date
+```
+
+## Troubleshooting Common Issues
+
+<CardGroup cols={1}>
+<Card title="View Creation Fails" icon="triangle-exclamation">
+**Common Causes:**
+- Missing schema permissions
+- Invalid table references
+- Forgot `_deleted = 0` filter
+- Syntax errors in SQL
+
+**Solution:** Verify schema exists, include deletion filter, and test query syntax first
+</Card>
+
+<Card title="Performance Issues" icon="gauge-simple">
+**Common Causes:**
+- Missing indexes on join columns
+- Complex calculations in SELECT
+- Too many JOINs
+
+**Solution:** Review execution plan and optimize JOIN conditions
+</Card>
+
+<Card title="Data Inconsistencies" icon="scale-unbalanced">
+**Common Causes:**
+- NULL values not handled
+- Different data types in UNION
+- Missing WHERE filters
+
+**Solution:** Use COALESCE for NULLs and verify data types match
+</Card>
+</CardGroup>
+
+## Learning Resources
+
+Ready to expand your SQL skills? Here are recommended resources:
+
+<Card title="SQL Tutorial" icon="book-open">
+For comprehensive SQL learning, visit the [GeeksforGeeks SQL Tutorial](https://www.geeksforgeeks.org/sql/sql-tutorial/) to build your foundation.
+</Card>
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Start Building" icon="hammer">
+Ready to create your first view? Begin with simple data customization using the patterns above.
+</Card>
+
+<Card title="Advanced Integration" icon="link">
+Need help with cross-system reporting? Contact your implementation team for guidance on complex integrations.
+</Card>
+</CardGroup>
+
+<Card title="Need Support?" icon="envelope">
+Have questions about SQL views or need assistance with complex queries? Reach out to [implementations@getkroo.com](mailto:implementations@getkroo.com) for expert guidance.
+</Card>
