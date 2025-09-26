@@ -38,7 +38,7 @@ SELECT
          WHEN status = 'C' THEN 'Closed'
     END AS rfi_status
 FROM kroo_procore.rfis
-WHERE _deleted = 0  -- Essential filter for all Kroo queries
+WHERE _fivetran_deleted = 0  -- Essential filter for all Kroo queries
 ```
 </Tab>
 
@@ -125,7 +125,7 @@ SELECT
     - SUM(costs) AS net_value
 FROM kroo_procore.invoices
 WHERE invoice_date BETWEEN '2025-09-01' AND '2025-09-30'
-    AND _deleted = 0  -- Always filter deleted records
+    AND _fivetran_deleted = 0  -- Always filter deleted records
 GROUP BY DATEPART(month, invoice_date)
 ```
 
@@ -176,18 +176,18 @@ Views act as the critical bridge in your Kroo data pipeline, connecting your war
 ## Essential Kroo Query Requirements
 
 <Warning>
-**Critical:** Every Kroo query MUST include `WHERE _deleted = 0` to filter out soft-deleted records. This is essential for accurate data and is required in all production views.
+**Critical:** Every Kroo query MUST include `WHERE _fivetran_deleted = 0` to filter out soft-deleted records. This is essential for accurate data and is required in all production views.
 </Warning>
 
-### The `_deleted` Filter Explained
+### The `_fivetran_deleted` Filter Explained
 
-Kroo uses soft deletes to maintain data integrity. When records are "deleted" in source systems, they're marked with `_deleted = 1` rather than being physically removed. Always filter these out:
+Kroo uses soft deletes to maintain data integrity. When records are "deleted" in source systems, they're marked with `_fivetran_deleted = 1` rather than being physically removed. Always filter these out:
 
 ```sql
 -- ✅ Correct - Always include this filter
 SELECT project_name, contract_amount
 FROM kroo_procore.projects
-WHERE _deleted = 0
+WHERE _fivetran_deleted = 0
 
 -- ❌ Wrong - Will include deleted records
 SELECT project_name, contract_amount
@@ -235,7 +235,7 @@ LEFT JOIN kroo_procore.projects p
 Filter rows to include only the data you need
 
 ```sql
-WHERE status = 'Approved' AND _deleted = 0
+WHERE status = 'Approved' AND _fivetran_deleted = 0
 ```
 </Step>
 
@@ -273,7 +273,7 @@ FROM kroo_procore.change_orders co
 JOIN kroo_procore.projects p
     ON co.project_id = p.procore_id
 WHERE co.status = 'Approved'
-    AND co._deleted = 0
+    AND co._fivetran_deleted = 0
 GROUP BY p.project_id, p.project_name
 ORDER BY total_contract_amount DESC;
 ```
@@ -492,7 +492,7 @@ SELECT
     SUM(costs) AS total_costs,
     SUM(contract_value + ISNULL(change_orders, 0) - costs) AS net_margin
 FROM kroo_procore.invoices
-WHERE _deleted = 0
+WHERE _fivetran_deleted = 0
 GROUP BY YEAR(invoice_date), MONTH(invoice_date), DATENAME(MONTH, invoice_date)
 ```
 
@@ -517,7 +517,7 @@ SELECT
 FROM kroo_procore.projects p
 LEFT JOIN kroo_procore.change_orders co ON p.procore_id = co.project_id
 LEFT JOIN kroo_procore.rfis rfi ON p.procore_id = rfi.project_id
-WHERE p._deleted = 0
+WHERE p._fivetran_deleted = 0
 GROUP BY p.project_id, p.project_name, p.project_status, p.start_date
 ```
 
@@ -528,7 +528,7 @@ GROUP BY p.project_id, p.project_name, p.project_status, p.start_date
 **Common Causes:**
 - Missing schema permissions
 - Invalid table references
-- Forgot `_deleted = 0` filter
+- Forgot `_fivetran_deleted = 0` filter
 - Syntax errors in SQL
 
 **Solution:** Verify schema exists, include deletion filter, and test query syntax first

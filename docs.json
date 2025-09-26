@@ -32,6 +32,12 @@
             ]
           },
           {
+            "group": "Integrations",
+            "pages": [
+              "p6-opc-file-uploads"
+            ]
+          },
+          {
             "group": "SQL & Analytics",
             "pages": [
               "sql-views-and-basics"
