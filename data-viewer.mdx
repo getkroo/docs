@@ -7,7 +7,7 @@ description: "Complete guide to using Kroo's SQL Data Viewer for querying your w
 
 ### Accessing the Data Viewer
 
-1. Log into your Kroo account at [app.kroo.com](https://app.kroo.com)
+1. Log into your Kroo account at [app.kroo.com](https://getkroo.com)
 2. Navigate to **Data & Settings** in the main navigation
 3. Click on the **Data Viewer** tab
 4. The SQL editor will load with access to your configured data schemas
@@ -61,8 +61,8 @@ LIMIT 100
 Your Kroo warehouse contains synchronized data from multiple sources:
 
 <CodeGroup>
-```text Procore Schema
-kroo_procore/                 # Procore construction data
+```text Autdesk Schema
+kroo_autodesk/                  # Autodesk construction data
 ├── projects                  # Project master data
 ├── rfis                      # RFIs (Requests for Information)
 ├── submittals                # Submittal logs
@@ -140,9 +140,7 @@ FROM kroo_procore.projects p
 
 | Shortcut | Action |
 |----------|--------|
-| **Ctrl/Cmd + Enter** | Execute query |
-| **Ctrl + Shift + F** | Format SQL |
-| **Ctrl + Space** | Trigger auto-completion |
+| **Ctrl + Enter** | Execute query |
 
 ## Executing Queries
 
@@ -444,10 +442,9 @@ Follow this pattern: `[department]_[description]_[frequency]`
 
 ```mermaid
 graph LR
-    A[Source Systems] --> B[Fivetran Pipelines]
-    B --> C[Snowflake Warehouse]
-    C --> D[Data Viewer]
-    C --> E[Power BI/Tableau]
+    A[Source Systems] --> B[Kroo Syncing]
+    B --> C[Kroo Data Viewer]
+    B --> D[Power BI/Tableau]
 ```
 
 ### Related Kroo Features
