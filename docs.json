@@ -41,6 +41,7 @@
           {
             "group": "SQL & Analytics",
             "pages": [
+              "data-viewer",
               "sql-views-and-basics"
             ]
           }
