@@ -1,0 +1,127 @@
+---
+title: "Table Snapshots (SCD2)"
+description: "How Kroo captures historical changes with SCD Type 2 using dbt snapshots."
+---
+
+## Overview
+
+Kroo preserves a full history of changes to important business entities using the Slowly Changing Dimension Type 2 (SCD2) methodology. This enables you to answer questions like “what was the status on a specific date?” or “how did this value evolve over time?”
+
+- Methodology: [SCD Type 2](https://en.wikipedia.org/wiki/Slowly_changing_dimension)
+- Implementation: dbt snapshoting managed by Kroo
+- Default cadence: snapshots are updated every 6 hours to capture changes
+
+<Info>
+SCD2 tracks history by writing a new version of a row whenever tracked fields change. Each version receives a validity window so you can reconstruct state at any point in time.
+</Info>
+
+## Snapshot columns and semantics
+
+Each snapshot table includes columns that define the validity window for every version of a record:
+
+| Column | Type | Meaning |
+|-------|------|---------|
+| `dbt_valid_from` | timestamp | Start of the validity window (inclusive) |
+| `dbt_valid_to` | timestamp or null | End of the validity window (exclusive). If NULL, the row is the current version |
+
+- A record with `dbt_valid_to IS NULL` is the current row for that business key.
+- A new version is created when tracked fields change between snapshot runs.
+
+## Example: Project history with SCD2
+
+Below is an illustrative example showing how a single project evolves over time in a snapshot table. Assume the table name is `kroo_procore.projects_snapshot` and the business key is `project_id`.
+
+<Tabs>
+<Tab title="History (all versions)">
+
+| project_id | name              | status   | dbt_valid_from        | dbt_valid_to          |
+|------------|-------------------|----------|-----------------------|-----------------------|
+| P-1001     | East Park Tower   | planning | 2025-01-01 00:00:00   | 2025-02-10 06:00:00   |
+| P-1001     | East Park Tower   | active   | 2025-02-10 06:00:00   | 2025-03-15 12:00:00   |
+| P-1001     | East Park Tower   | on_hold  | 2025-03-15 12:00:00   | NULL                  |
+
+<Info>
+Times are illustrative. Validity windows align with snapshot runs and may not match the exact second of source-system changes. As long as a change persists to a snapshot run, it will be captured as a new version.
+</Info>
+
+</Tab>
+
+<Tab title="Query - Current State">
+
+```sql
+-- Return only the latest version of every project
+SELECT project_id, name, status
+FROM kroo_procore.projects_snapshot
+WHERE dbt_valid_to IS NULL;
+```
+
+</Tab>
+
+<Tab title="Query - Point in Time">
+
+```sql
+-- What was the state on a particular timestamp?
+WITH as_of(ts) AS (
+  SELECT TIMESTAMP '2025-02-20 00:00:00'
+)
+SELECT project_id, name, status
+FROM kroo_procore.projects_snapshot, as_of
+WHERE dbt_valid_from <= as_of.ts
+  AND (dbt_valid_to IS NULL OR dbt_valid_to > as_of.ts);
+```
+
+</Tab>
+
+<Tab title="Query - Full History">
+
+```sql
+-- All versions for a single project, in order
+SELECT project_id, name, status, dbt_valid_from, dbt_valid_to
+FROM kroo_procore.projects_snapshot
+WHERE project_id = 'P-1001'
+ORDER BY dbt_valid_from;
+```
+
+</Tab>
+</Tabs>
+
+## How Kroo implements snapshots
+
+Kroo manages dbt snapshot configuration and orchestration for you. Under the hood, dbt handles the SCD2 logic and maintains the `dbt_valid_from` and `dbt_valid_to` columns.
+
+<Info>
+The snippet below is illustrative to show the concept. Kroo provisions and maintains the production configuration.
+</Info>
+
+```yaml
+snapshots:
+  - name: projects_snapshot
+    target_schema: kroo_procore
+    strategy: check            # track changes in selected columns
+    unique_key: project_id
+    check_cols: ["name", "status", "address", "budget"]
+    # For timestamp-based approaches, dbt also supports `strategy: timestamp` with `updated_at`
+```
+
+## Operational cadence and change capture
+
+<CardGroup cols={3}>
+<Card title="6-hour default cadence" icon="clock">
+Snapshots run every 6 hours by default to capture change data. Talk to your Kroo team if you need a different schedule.
+</Card>
+
+<Card title="Change detection" icon="arrows-rotate">
+A new version is written when tracked fields change between runs. Unchanged records retain their current window (`dbt_valid_to` remains NULL).
+</Card>
+
+<Card title="As-of semantics" icon="calendar-day">
+Use `dbt_valid_from` (inclusive) and `dbt_valid_to` (exclusive) to answer point-in-time questions.
+</Card>
+</CardGroup>
+
+## FAQs
+
+- Why do I see multiple rows per ID? Because SCD2 tracks historical versions of a record.
+- How do I query only the latest row? Filter with `WHERE dbt_valid_to IS NULL`.
+- What creates these validity columns? dbt snapshots (`dbt_valid_from` and `dbt_valid_to`).
+- Will brief, transient changes always appear? They will appear if the change persists until the next snapshot run (default every 6 hours).

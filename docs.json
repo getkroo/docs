@@ -28,6 +28,7 @@
             "group": "Data Management",
             "pages": [
               "historical-backfill",
+              "table-snapshots",
               "record-deletion"
             ]
           },
