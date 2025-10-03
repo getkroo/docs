@@ -5,7 +5,7 @@ description: "How Kroo captures historical changes with SCD Type 2 using dbt sna
 
 ## Overview
 
-Kroo preserves a full history of changes to important business entities using the Slowly Changing Dimension Type 2 (SCD2) methodology. This enables you to answer questions like “what was the status on a specific date?” or “how did this value evolve over time?”
+Kroo preserves a full history of changes to important business entities using the Slowly Changing Dimension Type 2 (SCD2) methodology. This enables you to answer questions like "what was the status on a specific date?" or "how did this value evolve over time?"
 
 - Methodology: [SCD Type 2](https://en.wikipedia.org/wiki/Slowly_changing_dimension)
 - Implementation: dbt snapshoting managed by Kroo
@@ -13,6 +13,23 @@ Kroo preserves a full history of changes to important business entities using th
 
 <Info>
 SCD2 tracks history by writing a new version of a row whenever tracked fields change. Each version receives a validity window so you can reconstruct state at any point in time.
+</Info>
+
+## Enabling Snapshots in the Kroo UI
+
+To enable snapshot functionality for a table in Kroo, navigate to the **Data settings** for your project:
+
+1. Go to **Projects** in the Kroo UI
+2. Select your project (e.g., `kroo_procore.projects`)
+3. Under **Data settings**, locate the **Snapshot Table** toggle
+4. Turn the toggle **ON** to enable snapshots for this table
+
+<Frame>
+  <img src="/images/snapshot-toggle.png" alt="Snapshot toggle in Kroo UI data settings" />
+</Frame>
+
+<Info>
+Once enabled, Kroo will begin capturing historical changes for this table according to the default 6-hour cadence. The destination schema shown above the toggle indicates where the snapshot table will be created.
 </Info>
 
 ## Snapshot columns and semantics
