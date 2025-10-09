@@ -5,7 +5,7 @@ description: "Understanding how Kroo handles deleted records and maintains data 
 
 ## Overview
 
-Kroo uses a **soft-delete methodology** to handle records that are deleted in your source construction management systems. This approach prioritizes data integrity and historical tracking over immediate data removal. Deleted records will always be marked with the condition `_fivetran_deleted=true`
+Kroo uses a **soft-delete methodology** to handle records that are deleted in your source construction management systems. This approach prioritizes data integrity and historical tracking over immediate data removal. Deleted records will always be marked with the condition `_fivetran_deleted=1`
 
 ## How Soft Deletes Work
 
@@ -17,7 +17,7 @@ During the next sync cycle, Kroo identifies that the record no longer exists in 
 </Step>
 
 <Step title="Marks as Deleted">
-Instead of removing the record, Kroo adds a deletion flag (typically `_fivetran_deleted = true`)
+Instead of removing the record, Kroo adds a deletion flag (typically `_fivetran_deleted = 1`)
 </Step>
 
 <Step title="Preserves Historical Data">
@@ -39,16 +39,8 @@ Soft-deleted records are identified by special columns:
 <Tab title="Standard Flag">
 ```sql
 -- Most common implementation
-SELECT * FROM kroo_procore.rfis 
-WHERE _fivetran_deleted IS NULL OR _fivetran_deleted = FALSE;
-```
-</Tab>
-
-<Tab title="Timestamp Flag">
-```sql
--- Some tables may include deletion timestamps
-SELECT * FROM kroo_procore.change_orders 
-WHERE _fivetran_deleted_at IS NULL;
+SELECT * FROM kroo_procore.rfis
+WHERE _fivetran_deleted = 0;
 ```
 </Tab>
 </Tabs>
@@ -59,18 +51,18 @@ To get only active (non-deleted) records in your queries:
 
 ```sql
 -- Example: Get active RFIs only
-SELECT 
+SELECT
     procore_id,
     due_date,
     status,
     created_date
-FROM kroo_procore.rfis 
-WHERE (_fivetran_deleted IS NULL OR _fivetran_deleted = FALSE)
+FROM kroo_procore.rfis
+WHERE (_fivetran_deleted = 0)
 AND status = 'open';
 ```
 
 <Info>
-**Pro Tip:** Many BI tools and data visualization platforms can automatically filter out soft-deleted records by adding `WHERE _fivetran_deleted IS NULL` to your base queries.
+**Pro Tip:** Many BI tools and data visualization platforms can automatically filter out soft-deleted records by adding `WHERE _fivetran_deleted = 0` to your base queries.
 </Info>
 
 ## Benefits of Soft Deletes
@@ -111,17 +103,17 @@ When building reports or dashboards:
 -- Standard query for current data
 SELECT project_name, total_budget
 FROM kroo_procore.projects
-WHERE _fivetran_deleted IS NULL
+WHERE _fivetran_deleted = 0
 ```
 </Tab>
 
 <Tab title="Include Deleted Records">
 ```sql
 -- Historical analysis including deleted records
-SELECT 
-    project_name, 
+SELECT
+    project_name,
     total_budget,
-    CASE WHEN _fivetran_deleted THEN 'Deleted' ELSE 'Active' END as status
+    CASE WHEN _fivetran_deleted = 1 THEN 'Deleted' ELSE 'Active' END as status
 FROM kroo_procore.projects
 ```
 </Tab>
@@ -129,11 +121,11 @@ FROM kroo_procore.projects
 <Tab title="Deletion Analysis">
 ```sql
 -- Analyze deletion patterns
-SELECT 
+SELECT
     DATE(updated_at) as deletion_date,
     COUNT(*) as records_deleted
 FROM kroo_procore.rfis
-WHERE _fivetran_deleted = TRUE
+WHERE _fivetran_deleted = 1
 GROUP BY DATE(updated_at)
 ORDER BY deletion_date DESC
 ```
@@ -144,7 +136,7 @@ ORDER BY deletion_date DESC
 
 <CardGroup cols={1}>
 <Card title="Query Performance" icon="gauge-high">
-Always include `WHERE _fivetran_deleted IS NULL` in your queries to maintain optimal performance and avoid including unwanted deleted records.
+Always include `WHERE _fivetran_deleted = 0` in your queries to maintain optimal performance and avoid including unwanted deleted records.
 </Card>
 
 <Card title="Storage Impact" icon="hard-drive">
