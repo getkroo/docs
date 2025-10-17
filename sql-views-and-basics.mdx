@@ -194,6 +194,22 @@ SELECT project_name, contract_amount
 FROM kroo_procore.projects
 ```
 
+### Understanding Internal Metadata Columns
+
+<Info>
+**Important:** Any column in the Kroo warehouse starting with an underscore (`_`) is internal metadata added by Kroo's data pipeline. These fields **did not come directly from your source system**.
+</Info>
+
+**Common Internal Metadata Columns to Avoid:**
+
+- **`_partner_id`** - Internal identifier used by Kroo's sync system (do not use in queries)
+- **`_data_type`** - Internal classification for pipeline processing (do not use in queries)
+- **`_fivetran_synced`** - Timestamp of last sync operation
+
+**Exception:** The `_fivetran_deleted` field is the only internal metadata column you should actively use in your queries - it's required to filter out soft-deleted records.
+
+**Best Practice:** When selecting columns for your views, focus on business data from your source systems and avoid internal metadata columns (except for the `_fivetran_deleted` filter in WHERE clauses).
+
 ## SQL Query Building Blocks
 
 Understanding the core SQL components will help you build effective views. Think of these as the essential ingredients in your data recipe.
