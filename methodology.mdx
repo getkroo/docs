@@ -75,6 +75,20 @@ Here's how we process a typical RFI response from Procore:
 **Why This Approach?** This methodology ensures your data warehouse follows relational database best practices while maintaining all the rich detail from your construction management systems.
 </Info>
 
+### Understanding Internal Metadata Columns
+
+<Warning>
+**Important:** Any column in the Kroo warehouse that starts with an underscore (`_`) is internal metadata added by Kroo's data pipeline. These fields **did not come directly from your source system**.
+</Warning>
+
+**Common Internal Metadata Columns:**
+
+- **`_partner_id`** - Internal identifier used by Kroo's sync system
+- **`_data_type`** - Internal classification used for pipeline processing
+- **`_fivetran_deleted`** - Soft delete flag (exception: this field MUST be used in WHERE clauses)
+
+**Best Practice:** When building queries and views, focus on the business columns that come from your source systems. The only internal metadata column you should regularly use is `_fivetran_deleted = 0` to filter out soft-deleted records.
+
 ## Sync Efficiency & Performance
 
 ### Smart Sync Strategies
