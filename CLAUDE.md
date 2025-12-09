@@ -106,6 +106,24 @@ Returns a map of pipeline names to their last sync timestamps:
 }
 ```
 
+#### Get Next Sync Times for a Partner
+```bash
+curl --location 'https://api.getkroo.com/api/v1/pipeline_status/next_sync_times?partner=procore' \
+--header 'Authorization: Basic ***'
+```
+
+Returns a map of pipeline names to their scheduled next sync times:
+```json
+{
+    "procore_coordination_issues": "2025-12-09T17:00:00.000-08:00",
+    "procore_action_plans": "2025-12-09T02:00:00.000-08:00",
+    "procore_schedule_tasks": "2025-12-09T03:00:00.000-08:00",
+    "procore_submittals": "2025-12-09T18:00:00.000-08:00",
+    "procore_departments": "2025-12-09T15:00:00.000-08:00",
+    "procore_offices": "2025-12-09T18:00:00.000-08:00"
+}
+```
+
 ### PowerBI Integration
 
 To access Pipeline Status data in PowerBI:

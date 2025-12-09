@@ -8,7 +8,8 @@ description: "Monitor data pipeline sync times using the Pipeline Status API and
 The Pipeline Status API helps you monitor the health and freshness of your Kroo data pipelines. Use it to:
 
 - **Track data freshness** - See when each pipeline last synced data
-- **Identify sync issues** - Spot pipelines that haven't updated recently  
+- **Determine data availability** - View scheduled next sync times for planning
+- **Identify sync issues** - Spot pipelines that haven't updated recently
 - **Create dashboards** - Build PowerBI reports for real-time monitoring
 - **Set up alerts** - Get notified when data becomes stale
 
@@ -78,28 +79,47 @@ curl --location 'https://api.getkroo.com/api/v1/pipeline_status/describe' \
 Discover which data integration partners are configured in your Kroo instance.
 
 ### Get Pipeline Status
-**Endpoint:** `GET /api/v1/pipeline_status?partner={partner_name}`
+**Endpoint:** `GET /api/v1/pipeline_status?partner={partner_name}&filters[]={pipeline_key}`
 
 Retrieve the last sync timestamp for all pipelines from a specific partner.
 
+**Query Parameters:**
+- `partner` (required) - The name of the integration partner (e.g., "procore", "cmic")
+- `filters[]` (optional) - Pipeline keys to include in the response. When specified, only these pipelines will be returned. Can be specified multiple times to include multiple pipelines. If omitted, all pipelines are returned
+
+<Info>
+**Multiple Filters Syntax:** To include multiple pipelines, repeat the `filters[]` parameter:
+```
+?partner=procore&filters[]=procore_vendors&filters[]=procore_offices&filters[]=procore_submittals
+```
+The `[]` brackets indicate an array parameter. Each repetition adds another pipeline to include.
+</Info>
+
 <Tabs>
-<Tab title="Windows (PowerShell)">
-```powershell
-Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore' `
--Method GET `
--Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
-```
-</Tab>
-<Tab title="Windows (Command Prompt)">
-```cmd
-curl --location "https://api.getkroo.com/api/v1/pipeline_status?partner=procore" ^
---header "Authorization: Basic [YOUR_CREDENTIALS]"
-```
-</Tab>
-<Tab title="Mac/Linux">
+<Tab title="Basic Request">
 ```bash
 curl --location 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore' \
 --header 'Authorization: Basic [YOUR_CREDENTIALS]'
+```
+</Tab>
+<Tab title="With Filters">
+```bash
+# Include only specific pipelines in the response
+curl --location 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore&filters[]=procore_vendors&filters[]=procore_offices' \
+--header 'Authorization: Basic [YOUR_CREDENTIALS]'
+```
+</Tab>
+<Tab title="Windows (PowerShell)">
+```powershell
+# Basic request
+Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore' `
+-Method GET `
+-Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
+
+# With filters
+Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore&filters[]=procore_vendors&filters[]=procore_offices' `
+-Method GET `
+-Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
 ```
 </Tab>
 </Tabs>
@@ -123,6 +143,71 @@ curl --location 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore'
 - Timestamps show the last successful sync in ISO 8601 format
 - `null` values indicate pipelines that haven't synced yet or are disabled
 - All times include timezone information for accurate tracking
+</Info>
+
+### Get Next Sync Times
+**Endpoint:** `GET /api/v1/pipeline_status/next_sync_times?partner={partner_name}&filters[]={pipeline_key}`
+
+Retrieve the scheduled next sync time for all pipelines from a specific partner. This helps you anticipate when fresh data will be available.
+
+**Query Parameters:**
+- `partner` (required) - The name of the integration partner (e.g., "procore", "cmic")
+- `filters[]` (optional) - Pipeline keys to include in the response. When specified, only these pipelines will be returned. Can be specified multiple times to include multiple pipelines. If omitted, all pipelines are returned
+
+<Info>
+**Multiple Filters Syntax:** To include multiple pipelines, repeat the `filters[]` parameter:
+```
+?partner=procore&filters[]=procore_submittals&filters[]=procore_departments&filters[]=procore_offices
+```
+The `[]` brackets indicate an array parameter. Each repetition adds another pipeline to include.
+</Info>
+
+<Tabs>
+<Tab title="Basic Request">
+```bash
+curl --location 'https://api.getkroo.com/api/v1/pipeline_status/next_sync_times?partner=procore' \
+--header 'Authorization: Basic [YOUR_CREDENTIALS]'
+```
+</Tab>
+<Tab title="With Filters">
+```bash
+# Include only specific pipelines in the response
+curl --location 'https://api.getkroo.com/api/v1/pipeline_status/next_sync_times?partner=procore&filters[]=procore_submittals&filters[]=procore_departments' \
+--header 'Authorization: Basic [YOUR_CREDENTIALS]'
+```
+</Tab>
+<Tab title="Windows (PowerShell)">
+```powershell
+# Basic request
+Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status/next_sync_times?partner=procore' `
+-Method GET `
+-Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
+
+# With filters
+Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status/next_sync_times?partner=procore&filters[]=procore_submittals&filters[]=procore_departments' `
+-Method GET `
+-Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
+```
+</Tab>
+</Tabs>
+
+**Sample Response:**
+```json
+{
+    "procore_coordination_issues": "2025-12-09T17:00:00.000-08:00",
+    "procore_action_plans": "2025-12-09T02:00:00.000-08:00",
+    "procore_schedule_tasks": "2025-12-09T03:00:00.000-08:00",
+    "procore_submittals": "2025-12-09T18:00:00.000-08:00",
+    "procore_departments": "2025-12-09T15:00:00.000-08:00",
+    "procore_offices": "2025-12-09T18:00:00.000-08:00"
+}
+```
+
+<Info>
+**Understanding the Response:**
+- Timestamps show the scheduled next sync time in ISO 8601 format
+- Use this to plan around data availability for time-sensitive reports
+- Combine with last sync times to understand the full sync schedule
 </Info>
 
 ## PowerBI Dashboard Setup
