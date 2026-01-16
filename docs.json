@@ -48,6 +48,24 @@
         ]
       },
       {
+        "tab": "Two-Way Sync",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "two-way-sync-summary"
+            ]
+          },
+          {
+            "group": "Specialized Syncers",
+            "pages": [
+              "acc-rfi-sync",
+              "acc-submittal-sync"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Data Operations",
         "groups": [
           {
