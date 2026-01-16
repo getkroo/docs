@@ -1,0 +1,184 @@
+---
+title: 'ACC RFIs'
+description: 'Synchronize RFIs between Autodesk Construction Cloud projects'
+---
+
+## Overview
+
+The ACC RFI Syncer keeps Requests for Information (RFIs) synchronized between two ACC projects. When one party creates or updates an RFI, the changes automatically appear in the other party's project.
+
+**Common Use Case**: A General Contractor and Architect each maintain their own ACC project. RFIs flow between them automatically.
+
+---
+
+## Workflow Steps
+
+<Steps>
+<Step title="GC Creates RFI">
+The General Contractor creates an RFI in their ACC project with:
+- Title and question
+- Status set to "Open"
+- Assignment information
+
+The RFI automatically syncs to the Architect's project.
+</Step>
+
+<Step title="GC Updates RFI Details (Optional)">
+While the RFI is still open, the GC can update the title or question. These changes sync to the Architect's project automatically.
+</Step>
+
+<Step title="Architect Provides Response">
+The Architect reviews the RFI and provides an official response:
+- Adds response text
+- Attaches any supporting documents
+- Changes status to "Answered"
+
+The response and attachments sync back to the GC's project.
+</Step>
+
+<Step title="GC Closes RFI">
+Once satisfied with the response, the GC closes the RFI. The closed status syncs to both projects, completing the workflow.
+</Step>
+</Steps>
+
+---
+
+## What Gets Synced
+
+### Initial Creation
+When an RFI is first created:
+- Title
+- Question text
+- Status (Open)
+- Reference to source RFI ID
+- Assignment to designated user in destination project
+
+### Updates While Open
+The GC can update:
+- Title
+- Question text
+
+### Official Response
+When the Architect responds:
+- Official response text
+- Response attachments (automatically downloaded and uploaded)
+- Status change to "Answered"
+
+### Closure
+When the GC closes:
+- Status change to "Closed"
+
+---
+
+## Setup Requirements
+
+### GC Setup Steps
+
+<Steps>
+<Step title="Add Kroo Service Account">
+Add the Kroo service account (`svcKroo@<mydomain>.com`) to your ACC project as **Project Admin** (can view all RFIs).
+</Step>
+
+<Step title="Provide Project ID">
+Provide your ACC project ID to Kroo support.
+</Step>
+
+<Step title="Confirm Coordinator Workflow">
+Confirm that the **coordinator workflow** is set for your project in your ACC tenant.
+</Step>
+
+<Step title="Confirm RFI Numbering">
+Confirm that your current RFI numbering is accurate and matches to date.
+</Step>
+
+<Step title="Set Start Date">
+Confirm the start date and time for RFI transfer (the "line in the sand"). Only RFIs created **after** this date will be synced.
+</Step>
+
+<Step title="Create Attachments Folder">
+Create a folder named **"Kroo - Attachments"** in your ACC project. This folder is used for storing RFI attachments.
+</Step>
+</Steps>
+
+### Architect Setup Steps
+
+<Steps>
+<Step title="Add Kroo Service Account">
+Add the Kroo service account (`svcKroo@<mydomain>.com`) to your ACC project with **all RFI permissions**.
+</Step>
+
+<Step title="Confirm Coordinator Workflow">
+Confirm that the **coordinator workflow** is set for your project in your ACC tenant.
+</Step>
+
+<Step title="Confirm RFI Numbering">
+Confirm that your current RFI numbering is accurate and matches to date.
+</Step>
+
+<Step title="Set Start Date">
+Confirm the start date and time for RFI transfer (the "line in the sand"). Only RFIs created **after** this date will be synced.
+</Step>
+
+<Step title="Create Attachments Folder">
+Create a folder named **"Kroo - Attachments"** in your ACC project. This folder is used for storing RFI attachments.
+</Step>
+</Steps>
+
+<Info>
+**Start Date ("Line in the Sand")**: The sync only processes RFIs created after the agreed-upon start date. This prevents syncing historical RFIs and ensures a clean starting point.
+</Info>
+
+---
+
+## Common Issues
+
+<AccordionGroup>
+<Accordion title="RFI Not Appearing in Destination">
+**Possible Causes:**
+- Assigned user doesn't exist in destination project
+- User lacks RFI permissions
+- Source RFI missing required fields (title, question, status)
+
+**Check:**
+- Verify user exists and has RFI access
+- Ensure all required fields are filled out in source RFI
+- Review Sync Details portal for error messages
+</Accordion>
+
+<Accordion title="Response Not Syncing Back">
+**Possible Causes:**
+- Attachment files too large or unsupported format
+- Network issues during file transfer
+- API rate limiting
+
+**Resolution:**
+- Check attachment file sizes (ACC has limits)
+- Wait for next sync cycle (typically 15-30 minutes)
+- Review error logs in Sync Details portal
+</Accordion>
+
+<Accordion title="Updates Not Reflecting">
+**Possible Causes:**
+- RFI not in correct state for updates
+- Sync hasn't run yet (runs every 15-30 minutes)
+
+**Resolution:**
+- Verify RFI is in "Open" state for detail updates
+- Wait for next sync cycle
+- Check Sync Details portal for sync timing
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Getting Help
+
+If you encounter sync issues with RFIs:
+
+1. **Check the Sync Details portal** in the Kroo app (Two-Way Sync → Details)
+2. **Review error messages** for specific failure information
+3. **Contact Kroo support** at [implementations@getkroo.com](mailto:implementations@getkroo.com) with:
+   - Source and destination project IDs
+   - RFI IDs from both projects
+   - Error messages from Sync Details portal
+   - Timestamp when the issue occurred

@@ -1,0 +1,234 @@
+---
+title: 'Overview'
+description: 'Automatically synchronize data between multiple construction management systems'
+---
+
+## What is Two-Way Sync?
+
+Two-Way Sync automatically keeps data synchronized between multiple construction management systems. When changes are made in one system, they're automatically reflected in the other system, ensuring all stakeholders always have the latest information.
+
+## How It Works
+
+The sync process runs automatically on a schedule, comparing data between systems and making updates where needed:
+
+<Steps>
+<Step title="Fetch Data">
+The system retrieves records from both systems to compare their current state.
+</Step>
+
+<Step title="Identify Changes">
+Records are compared to identify new items that need to be created and existing items that have been updated.
+</Step>
+
+<Step title="Transform Data">
+Data is transformed to match the destination system's requirements. This may include field mapping, data format conversions, and in some cases, AI-powered matching (such as matching specification sections or submittal types between different project configurations).
+</Step>
+
+<Step title="Create Records">
+New records are created in the destination system with all relevant fields and attachments.
+</Step>
+
+<Step title="Update Records">
+Existing records are updated when changes are detected, based on the current workflow state.
+</Step>
+
+<Step title="Sync Attachments">
+Attachments are automatically downloaded from one system and uploaded to the other alongside the records.
+</Step>
+</Steps>
+
+The system tracks which records have been synced using a mapping table to avoid duplicates and ensure updates flow correctly.
+
+---
+
+## Key Features
+
+<CardGroup cols={2}>
+<Card title="Bidirectional Sync" icon="arrows-rotate">
+Changes flow in both directions based on workflow states, allowing both teams to collaborate seamlessly.
+</Card>
+
+<Card title="State-Based Logic" icon="sitemap">
+Synchronization behavior adapts based on the current status of each record, ensuring the right updates happen at the right time.
+</Card>
+
+<Card title="Automatic Attachments" icon="paperclip">
+Files and attachments are automatically transferred between projects during sync operations.
+</Card>
+
+<Card title="AI-Powered Matching" icon="brain">
+For complex records like Submittals, AI intelligently matches specifications and types between different project configurations.
+</Card>
+
+<Card title="Error Recovery" icon="shield-check">
+Failed syncs are tracked and can be retried after fixing issues, with detailed logging for troubleshooting.
+</Card>
+
+<Card title="Scheduled Execution" icon="clock">
+Syncs run automatically on a regular schedule, typically every 15-30 minutes, with no manual intervention required.
+</Card>
+</CardGroup>
+
+---
+
+## Specialized Syncers
+
+Kroo provides specialized syncers for common construction workflows:
+
+<CardGroup cols={2}>
+<Card title="ACC RFIs" icon="circle-question" href="/acc-rfi-sync">
+Synchronize Requests for Information (RFIs) between ACC systems with support for questions, responses, and closure workflows.
+</Card>
+
+<Card title="ACC Submittals" icon="file-invoice" href="/acc-submittal-sync">
+Synchronize Submittals between ACC systems with complex approval workflows, including AI-powered spec matching and multi-stage state transitions.
+</Card>
+</CardGroup>
+
+<Info>
+Contact Kroo support for additional platform-specific syncer documentation.
+</Info>
+
+---
+
+## Getting Started
+
+To enable Two-Way Sync:
+
+1. **Contact Kroo Support** at [implementations@getkroo.com](mailto:implementations@getkroo.com)
+2. **Provide System Information**:
+   - Platform types (ACC, Procore, etc.)
+   - Project IDs or Company IDs for both systems
+   - User IDs for assignments
+   - Company IDs for workflow participants
+3. **Configuration Setup**: Kroo will configure the sync based on your workflow requirements
+4. **Initial Sync**: Monitor the first sync cycles to ensure everything is working correctly
+
+<Info>
+Each syncer has specific setup requirements. See the Specialized Syncers section for detailed configuration information for each platform and data type.
+</Info>
+
+---
+
+## How Two-Way Sync Works
+
+Two-Way Sync operates through a series of automated steps that run on a regular schedule:
+
+<Steps>
+<Step title="Fetch from Both Systems">
+The sync engine retrieves current data from both systems (e.g., System A and System B) using API connections.
+</Step>
+
+<Step title="Compare & Identify Changes">
+Records are compared to find:
+- New records that exist in one system but not the other
+- Existing records where field values have changed
+- Records that match workflow state requirements
+</Step>
+
+<Step title="Transform Data">
+For records that need syncing:
+- Field mappings are applied (e.g., matching field names between systems)
+- AI transforms may run (e.g., matching spec sections between different projects)
+- Custom business logic is applied based on record state
+</Step>
+
+<Step title="Write Changes">
+Changes are pushed to the destination system:
+- **Create**: New records are created with all relevant fields
+- **Update**: Existing records are updated with changed fields only
+- **Attachments**: Files are downloaded from source and uploaded to destination
+</Step>
+
+<Step title="Track Linkage">
+An ID mapping table records which records are linked between systems, enabling:
+- Future updates to find the correct destination record
+- Bidirectional sync (changes can flow in either direction)
+- Error tracking and recovery
+</Step>
+</Steps>
+
+<Info>
+**Scheduled Execution**: Syncs typically run every 15-30 minutes automatically. No manual intervention is required for routine operations.
+</Info>
+
+---
+
+## Monitoring & Troubleshooting
+
+### Sync Details Portal
+
+The **Sync Details** portal in the Kroo app provides real-time visibility into all sync operations. This is your first stop for identifying and troubleshooting sync issues.
+
+**Access the portal:**
+1. Log into the Kroo app
+2. Navigate to **Two-Way Sync → Details**
+
+<Frame>
+  <img src="/images/sync-details-portal.png" alt="Sync Details Portal showing sync records with status indicators" />
+</Frame>
+
+**What you can see:**
+- **Status**: Visual indicator showing "Sync'd" (successful) or "Errored" (failed)
+- **Error logs**: Detailed error messages explaining why a sync may have failed
+- **Record details**: View source and destination records with "View Rfi" or similar buttons
+- **Last updated**: Timestamp showing when each sync last ran
+- **Search & filter**: Find specific syncs by name, code, or status
+- **Export**: Download sync data as CSV for analysis
+
+<Info>
+**Best Practice**: If you suspect a sync failure or have questions about sync status, check the Sync Details portal first. The error logs provide specific information about what went wrong and how to fix it.
+</Info>
+
+### Common Failure Scenarios
+
+<AccordionGroup>
+<Accordion title="Transient Errors">
+**Examples**: API rate limits, network timeouts, temporary service outages
+
+**Resolution**: Automatic retry on next sync cycle (no action needed)
+</Accordion>
+
+<Accordion title="Configuration Errors">
+**Examples**: Invalid user IDs, missing parameters, permission issues
+
+**Resolution**: Fix configuration and mark records for retry
+</Accordion>
+
+<Accordion title="Data Quality Errors">
+**Examples**: Missing required fields, AI matching failures, invalid values
+
+**Resolution**: Improve source data quality, add missing metadata
+</Accordion>
+
+<Accordion title="System Errors">
+**Examples**: ACC API changes, unexpected responses, software bugs
+
+**Resolution**: Contact Kroo support for investigation
+</Accordion>
+</AccordionGroup>
+
+<Warning>
+If you notice consistent sync failures, contact Kroo support with:
+- Source and destination record IDs
+- Error messages from logs
+- Timestamp of when the issue occurred
+</Warning>
+
+---
+
+## Getting Help
+
+If you encounter issues with Two-Way Sync:
+
+1. **Check the Specialized Syncers pages** for syncer-specific troubleshooting
+2. **Review error messages** in sync logs (available through Kroo support)
+3. **Contact Kroo support** at [implementations@getkroo.com](mailto:implementations@getkroo.com) with:
+   - Project IDs for both systems
+   - Record IDs (RFI or Submittal numbers)
+   - Error messages or symptoms
+   - Timestamp when the issue occurred
+
+<Info>
+Kroo support can access detailed sync logs, AI matching reasoning, and system diagnostics to quickly identify and resolve issues.
+</Info>

@@ -1,0 +1,289 @@
+---
+title: 'ACC Submittals'
+description: 'Synchronize Submittals between Autodesk Construction Cloud projects with AI-powered matching'
+---
+
+## Overview
+
+The ACC Submittal Syncer keeps Submittals synchronized between two ACC projects with support for complex approval workflows. The system uses AI to intelligently match specification sections and submittal types between different project configurations.
+
+**Common Use Case**: A General Contractor and Architect each maintain their own ACC project. Submittals flow through the approval workflow automatically, from draft to submission to review to closure.
+
+---
+
+## Workflow Steps
+
+<Steps>
+<Step title="GC Creates Submittal Draft">
+The General Contractor creates a submittal in their ACC project with:
+- Title and description
+- Specification section
+- Submittal type
+- Required dates and lead times
+- Status set to "Waiting for Submission"
+
+The submittal automatically syncs to the Architect's project. **AI matches the spec section and submittal type** between the two projects, even if they use different naming conventions.
+</Step>
+
+<Step title="GC Updates Draft Details (Optional)">
+While in draft status, the GC can update:
+- Title, description, or subsection
+- Dates and lead times
+- Priority
+
+Changes sync to the Architect's project automatically.
+</Step>
+
+<Step title="GC Submits for Review">
+When ready, the GC submits the submittal for official review:
+- Status changes to "Under Review"
+- Submission package attachments are synced
+- Submittal is assigned to designated reviewer
+
+The submission syncs to the Architect's project for review.
+</Step>
+
+<Step title="Architect Reviews">
+The Architect reviews the submittal in their project and provides feedback. They can add review comments and attach response documents.
+</Step>
+
+<Step title="Architect Closes Review">
+The Architect completes their review and closes the submittal:
+- Provides final decision and comments
+- Attaches any review response documents
+- Status changes to "Closed"
+
+The closure, comments, and attachments sync back to the GC's project.
+</Step>
+</Steps>
+
+---
+
+## What Gets Synced
+
+### Initial Creation
+When a submittal is first created:
+- Title and description
+- Specification section (AI-matched)
+- Submittal type (AI-matched)
+- All date fields (required on job date, lead time, approval date, etc.)
+- Subcontractor assignment
+- "Kroo" template assignment
+
+### Updates While in Draft
+The GC can update:
+- Title, description, subsection
+- All date fields
+- Priority
+
+### Submission for Review
+When submitted:
+- Status change to "Under Review"
+- Submission package attachments
+- Assignment to reviewer
+
+### Review Closure
+When closed:
+- Status change to "Closed"
+- Review comments
+- Review response attachments
+
+---
+
+## AI-Powered Matching
+
+The system uses AI to match fields between projects that may have different configurations:
+
+### Specification Sections
+Different projects may organize specs differently (e.g., "Building Materials 500" vs "MAT-500"). The AI finds the best match with at least 70% confidence.
+
+**Example Match:**
+- Source: "Building Materials (500)"
+- Destination: "MAT-500"
+- Confidence: 92%
+
+### Submittal Types
+Similarly, submittal types (Product Data, Shop Drawings, etc.) are matched between projects using AI.
+
+<Info>
+**Confidence Threshold**: If the AI cannot find a match with at least 70% confidence, the sync will fail with a detailed error message explaining why.
+</Info>
+
+---
+
+## Setup Requirements
+
+### GC Setup Steps
+
+<Steps>
+<Step title="Add Kroo Service Account">
+Add the Kroo service account (`svcKroo@bartlettcocke.com`) to your ACC project as **Submittal Manager** (can view all Submittals).
+</Step>
+
+<Step title="Provide Project ID">
+Provide your ACC project ID to Kroo support.
+</Step>
+
+<Step title="Verify Spec Sections">
+Verify that your Submittal Spec Sections match those in the Architect's project. Kroo can load pre-determined submittal spec sections if needed.
+</Step>
+
+<Step title="Verify Response Options">
+Verify that your Submittal Response Options match those in the Architect's project.
+</Step>
+
+<Step title="Confirm Numbering Scheme">
+Confirm that your current submittal numbering scheme will match the Architect's.
+</Step>
+
+<Step title="Set Start Date">
+Confirm the start date and time for submittal transfer (the "line in the sand"). Only submittals created **after** this date will be synced.
+</Step>
+</Steps>
+
+### Architect Setup Steps
+
+<Steps>
+<Step title="Add Kroo Service Account">
+Add the Kroo service account (`svcKroo@bartlettcocke.com`) to your ACC project as **Submittal Manager** (can view all Submittals).
+</Step>
+
+<Step title="Provide Project ID">
+Provide your ACC project ID to Kroo support.
+</Step>
+
+<Step title="Provide Default Submittal Manager">
+Provide the **Default Submittal Manager** for the project. This can be a person or group who will review submittals.
+</Step>
+
+<Step title="Verify Spec Sections">
+Verify that your Submittal Spec Sections match those in the GC's project. Kroo can load pre-determined submittal spec sections if needed.
+</Step>
+
+<Step title="Verify Response Options">
+Verify that your Submittal Response Options match those in the GC's project.
+</Step>
+
+<Step title="Confirm Numbering Scheme">
+Confirm that your current submittal numbering scheme will match the GC's.
+</Step>
+
+<Step title="Set Start Date">
+Confirm the start date and time for submittal transfer (the "line in the sand"). Only submittals created **after** this date will be synced.
+</Step>
+</Steps>
+
+<Info>
+**Start Date ("Line in the Sand")**: The sync only processes submittals created after the agreed-upon start date. This prevents syncing historical submittals and ensures a clean starting point.
+</Info>
+
+<Warning>
+**Critical Configuration**: Spec sections and response options must match between projects for successful sync. Mismatched configurations can cause AI matching failures or workflow issues.
+</Warning>
+
+---
+
+## Common Issues
+
+<AccordionGroup>
+<Accordion title="AI Matching Failed">
+**Symptom:** Submittal creation fails with "AI could not find a confident match"
+
+**Possible Causes:**
+- Spec sections or submittal types missing in destination project
+- Naming differs significantly between projects (< 70% confidence)
+- Source submittal missing spec or type
+
+**Resolution:**
+- Ensure both projects have spec sections and submittal types configured
+- Use similar naming conventions for better matching
+- Add missing specs or types to destination project
+- Contact support to review AI matching logs
+</Accordion>
+
+<Accordion title="Missing Kroo Template">
+**Symptom:** Submittal creation fails with "No template with 'Kroo' in name found"
+
+**Resolution:**
+- Create a submittal template in the destination ACC project
+- Name it "Kroo" or include "Kroo" in the template name (case-insensitive)
+- Contact support to retry failed submittals
+</Accordion>
+
+<Accordion title="Submittal Not Appearing in Destination">
+**Possible Causes:**
+- Source submittal missing required fields (spec, type, title)
+- AI matching failed (< 70% confidence)
+- User or company IDs don't exist in destination
+- Kroo template missing
+
+**Check:**
+- Verify all required fields are filled in source submittal
+- Review Sync Details portal for specific error messages
+- Check that users and companies exist with proper permissions
+</Accordion>
+
+<Accordion title="Attachments Not Syncing">
+**Possible Causes:**
+- Attachment files too large or unsupported format
+- Network issues during file transfer
+- Wrong attachment category for submittal state
+
+**Resolution:**
+- Check attachment file sizes (ACC has limits)
+- Ensure files are in supported formats
+- Wait for next sync cycle (typically 15-30 minutes)
+- Review error logs in Sync Details portal
+
+<Info>
+The system automatically transforms attachment categories when needed (e.g., category 2 → category 1 during submission).
+</Info>
+</Accordion>
+
+<Accordion title="Submission Not Transitioning">
+**Possible Causes:**
+- Missing reviewer configuration (manager user ID)
+- Reviewer doesn't exist or lacks permissions
+- Invalid workflow state transition
+
+**Resolution:**
+- Verify reviewer user ID is configured correctly
+- Ensure reviewer has submittal access in destination project
+- Contact support to review state transition logs
+
+<Info>
+ACC requires multi-step state transitions for certain changes. The system handles this automatically behind the scenes.
+</Info>
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Edge Cases
+
+### Reopened Submittals
+If a submittal is reopened after being reviewed, the system detects this and handles the workflow appropriately based on the current state.
+
+### Multiple Revisions
+The system tracks submittals across multiple revision cycles, maintaining the link between source and destination even as the workflow repeats.
+
+### Partial Matches
+If AI matching produces low confidence (50-69%), the sync will fail with detailed reasoning about why the match wasn't confident enough. Review the error message to understand what improvements are needed.
+
+---
+
+## Getting Help
+
+If you encounter sync issues with submittals:
+
+1. **Check the Sync Details portal** in the Kroo app (Two-Way Sync → Details)
+2. **Review error messages** for specific failure information, including AI matching confidence and reasoning
+3. **Contact Kroo support** at [implementations@getkroo.com](mailto:implementations@getkroo.com) with:
+   - Source and destination project IDs
+   - Submittal IDs from both projects
+   - Error messages from Sync Details portal (especially AI matching failures)
+   - Timestamp when the issue occurred
+
+<Info>
+**Support Access**: Kroo support can view AI matching confidence scores, reasoning text, and detailed transformation logs to quickly diagnose issues.
+</Info>
