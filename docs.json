@@ -72,7 +72,8 @@
             "group": "Monitoring & Maintenance",
             "pages": [
               "pipeline-status",
-              "manual-refresh"
+              "manual-refresh",
+              "sage-on-prem-troubleshooting"
             ]
           }
         ]

@@ -1,0 +1,62 @@
+---
+title: "Sage On-Prem Agent Troubleshooting"
+description: "Diagnose and resolve common issues with the Kroo Sage on-prem sync agent on Windows."
+---
+
+The Kroo Sage on-prem sync agent runs as a Windows Service (`Kroo.Sync.Service.exe`), configured via:
+
+```
+C:\ProgramData\KrooData\appsettings.json
+```
+
+## Checking Windows Event Logs
+
+<Info>
+**Always start here.** The Windows Event Viewer contains detailed error messages that pinpoint the root cause of most agent issues.
+</Info>
+
+1. Press `Win + R`, type `eventvwr.msc`, and press Enter.
+2. Expand **Windows Logs > Application**.
+3. Filter for errors from `Kroo.Sync.Service.exe` or `.NET Runtime`.
+
+## Service Error 1053
+
+The service fails to start with: **The service did not respond to the start or control request in a timely fashion.**
+
+Check the Event Viewer for an error like:
+
+```
+System.ArgumentException: An item with the same key has already been added.
+   Key: AppSettings:Tables:APM_MASTER__VENDOR
+```
+
+This means there is a **duplicate table key** in `appsettings.json`.
+
+### Fix
+
+<Warning>
+Back up `appsettings.json` before editing.
+</Warning>
+
+<Steps>
+<Step title="Remove the duplicate entry">
+Open `C:\ProgramData\KrooData\appsettings.json` and search for the key from the error message (e.g., `APM_MASTER__VENDOR`). Delete the duplicate, keeping only one instance.
+</Step>
+
+<Step title="Validate the JSON">
+Paste the file contents into a JSON validator (such as [jsonlint.com](https://jsonlint.com)) to catch syntax errors like trailing commas or missing brackets.
+</Step>
+
+<Step title="Restart the service">
+Open `services.msc`, find **Kroo Sync Service**, and click **Start**.
+</Step>
+</Steps>
+
+## General Tips
+
+- **Validate JSON before saving** -- a syntax error in `appsettings.json` will prevent the service from starting.
+- **Restart after config changes** -- the agent only reads `appsettings.json` at startup.
+
+<Info>
+**Need help?** Email [implementations@getkroo.com](mailto:implementations@getkroo.com) with the Event Viewer error details and a copy of your `appsettings.json`.
+</Info>
