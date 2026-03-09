@@ -16,55 +16,27 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Getting Started",
+        "tab": "Platform",
         "groups": [
           {
-            "group": "Understanding Kroo",
+            "group": "Overview",
             "pages": [
+              "index",
               "methodology"
             ]
           },
           {
-            "group": "Data Management",
+            "group": "Data Lifecycle",
             "pages": [
-              "historical-backfill",
+              "record-deletion",
               "table-snapshots",
-              "record-deletion"
+              "historical-backfill"
             ]
           },
           {
-            "group": "Integrations",
+            "group": "Two-Way Sync",
             "pages": [
-              "p6-opc-file-uploads"
-            ]
-          },
-          {
-            "group": "Kroo Downloads",
-            "pages": [
-              "kris-teams-bot"
-            ]
-          },
-          {
-            "group": "SQL & Analytics",
-            "pages": [
-              "sql-views-and-basics",
-              "data-viewer"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Two-Way Sync",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "two-way-sync-summary"
-            ]
-          },
-          {
-            "group": "Specialized Syncers",
-            "pages": [
+              "two-way-sync-summary",
               "acc-rfi-sync",
               "acc-submittal-sync"
             ]
@@ -72,12 +44,36 @@
         ]
       },
       {
-        "tab": "Data Operations",
+        "tab": "Guides",
         "groups": [
           {
-            "group": "Monitoring & Maintenance",
+            "group": "Analytics",
             "pages": [
-              "pipeline-status",
+              "sql-views-and-basics",
+              "data-viewer"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "p6-opc-file-uploads",
+              "pipeline-status"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Admin & Support",
+        "groups": [
+          {
+            "group": "Setup",
+            "pages": [
+              "kris-teams-bot"
+            ]
+          },
+          {
+            "group": "Maintenance",
+            "pages": [
               "manual-refresh",
               "sage-on-prem-troubleshooting"
             ]

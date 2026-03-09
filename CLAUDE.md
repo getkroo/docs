@@ -30,9 +30,6 @@ mint broken-links
 
 ### Content Organization
 - **Main documentation files**: `.mdx` files in root directory
-- **API Reference**: `/api-reference/` directory with endpoint documentation
-- **Guides**: Organized by tabs in `docs.json` navigation
-- **Snippets**: Reusable content in `/snippets/` directory
 - **Assets**: Images in `/images/`, logos in `/logo/`
 
 ### Key Configuration Files
@@ -41,9 +38,10 @@ mint broken-links
 - `.gitignore`: Git ignore patterns
 
 ### Documentation Structure
-The site uses a tabbed navigation with:
-- **Guides** tab: "How Kroo Works" section covering methodology, historical backfill, and record deletion
-- **Troubleshooting** tab: "Data Freshness" section with manual refresh guidance
+The site uses a 3-tab navigation organized by user intent:
+- **Platform** tab: Overview (Welcome, Methodology), Data Lifecycle (Record Deletion, Table Snapshots, Historical Backfill), Two-Way Sync (Summary, ACC RFIs, ACC Submittals)
+- **Guides** tab: Analytics (SQL Views & Basics, Data Viewer), Integrations (P6/OPC File Uploads, Pipeline Status & PowerBI)
+- **Admin & Support** tab: Setup (Kris Teams Bot), Maintenance (Manual Data Refresh, Sage On-Prem Troubleshooting)
 
 ### Content Patterns
 - All content files use `.mdx` format (MDX = Markdown + JSX)
