@@ -1,0 +1,90 @@
+---
+title: "Kris Teams Bot"
+description: "Install and configure the Kris enterprise search bot for Microsoft Teams"
+icon: "message-bot"
+---
+
+Kris is Kroo's enterprise search bot for Microsoft Teams. It lets your team ask natural language questions about construction project data directly from Teams conversations.
+
+## Prerequisites
+
+- **Microsoft Teams Administrator** role (or Global Administrator) in your Microsoft 365 tenant
+- Access to the [Microsoft Teams Admin Center](https://admin.teams.microsoft.com)
+- Custom apps must be allowed in your org-wide app settings (see [Microsoft's documentation](https://learn.microsoft.com/en-us/microsoftteams/teams-custom-app-policies-and-settings) for details)
+- An active Kroo account with enterprise search enabled
+
+## Download
+
+Download the Kris Teams bot app package:
+
+<Card title="Download Kris Teams Bot" icon="download" href="/teams-manifest.zip">
+  Microsoft Teams app package (.zip) for upload to the Teams Admin Center.
+</Card>
+
+## Installation
+
+<Steps>
+<Step title="Open the Teams Admin Center">
+  Navigate to [https://admin.teams.microsoft.com](https://admin.teams.microsoft.com) and sign in with your Microsoft 365 admin credentials.
+</Step>
+
+<Step title="Go to Manage Apps">
+  In the left sidebar, go to **Teams apps** > [**Manage apps**](https://admin.teams.microsoft.com/policies/manage-apps).
+</Step>
+
+<Step title="Upload the app package">
+  Click **Upload new app** at the top of the page, then click **Upload**. Select the `teams-manifest.zip` file you downloaded above.
+
+  <Info>
+  The upload makes the Kris bot available within your organization's app catalog. It does not automatically install it for any users.
+  </Info>
+</Step>
+
+<Step title="Verify the app is listed">
+  After uploading, search for **Kris** in the Manage apps list. Confirm its status shows as **Allowed**.
+
+  <Warning>
+  If the app status shows as **Blocked**, click on the app name to open its details page and change the status to **Allowed**.
+  </Warning>
+</Step>
+</Steps>
+
+<Info>
+It may take up to 24 hours for Kris to appear in individual users' Teams app store after uploading and allowing the app.
+</Info>
+
+## Making Kris available to users
+
+After uploading, you can control who has access to Kris through Teams app policies.
+
+<Steps>
+<Step title="Navigate to Setup Policies">
+  In the Teams Admin Center, go to **Teams apps** > **Setup policies**.
+</Step>
+
+<Step title="Edit the appropriate policy">
+  Select the policy that applies to the users who should have access to Kris (e.g., **Global (Org-wide default)**) and click **Edit**.
+</Step>
+
+<Step title="Add Kris as an installed app (optional)">
+  Under **Installed apps**, click **Add apps**, search for **Kris**, and add it. This automatically installs the bot for all users under this policy.
+
+  <Tip>
+  If you prefer users to install Kris themselves, skip this step. Users can find it in the Teams app store under the **Built for your org** section.
+  </Tip>
+</Step>
+</Steps>
+
+## Using Kris
+
+Once installed, users can interact with Kris in three ways:
+
+- **Personal chat**: Open a 1:1 chat with Kris to ask questions privately
+- **Team channels**: @mention Kris in a channel to query project data in context
+- **Group chats**: Add Kris to a group chat for collaborative data exploration
+
+Type `help` to see available commands and example queries.
+
+## Support
+
+If you run into issues during setup, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).

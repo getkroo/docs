@@ -39,6 +39,12 @@
             ]
           },
           {
+            "group": "Kroo Downloads",
+            "pages": [
+              "kris-teams-bot"
+            ]
+          },
+          {
             "group": "SQL & Analytics",
             "pages": [
               "sql-views-and-basics",
