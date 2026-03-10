@@ -68,7 +68,8 @@
           {
             "group": "Setup",
             "pages": [
-              "kris-teams-bot"
+              "kris-teams-bot",
+              "windows-desktop-app"
             ]
           },
           {

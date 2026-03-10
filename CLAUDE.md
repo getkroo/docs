@@ -136,6 +136,31 @@ To access Pipeline Status data in PowerBI:
 
 The API returns timestamps in ISO 8601 format with timezone information, which PowerBI can parse automatically for time-based analysis and alerting.
 
+## Page Style Guide
+
+All documentation pages should follow a consistent structure and use Mintlify components uniformly. Reference `kris-teams-bot.mdx` as the canonical example.
+
+### Frontmatter
+- Always include `title`, `description`, and `icon`
+- Description should not end with a period
+
+### Page Structure (in order)
+1. **Intro paragraph** — one sentence explaining what the feature/tool is
+2. **Prerequisites** section — bulleted list of requirements, with bold labels
+3. **Download** section — use `<Card>` component with `icon="download"` and `href` for download links (never raw `<a>` tags)
+4. **Installation** section — use `<Steps>` / `<Step title="...">` for sequential instructions
+5. **Usage / additional sections** as needed
+6. **Support** section — always end with a link to `implementations@getkroo.com`
+
+### Component Usage
+- `<Card>` for download links and prominent CTAs
+- `<Steps>` / `<Step>` for sequential instructions
+- `<Info>` for helpful context that doesn't block the user
+- `<Warning>` for gotchas that could cause issues
+- `<Tip>` for optional recommendations
+- Bold (`**text**`) for UI element names and key terms
+- Inline code (`` `text` ``) for file names, commands, and technical values
+
 ## Publishing
 
 Changes are automatically deployed to production when pushed to the default branch via GitHub app integration. Local preview available at `http://localhost:3000` during development.
