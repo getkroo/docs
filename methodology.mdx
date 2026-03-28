@@ -1,11 +1,27 @@
 ---
 title: "How Kroo Works"
 description: "Understanding Kroo's data modeling approach and sync methodology for construction data integration."
+icon: "lightbulb"
 ---
 
 ## Overview
 
 Kroo transforms complex construction API data into clean, queryable tables in your data warehouse. This page explains our data modeling methodology and sync strategies.
+
+<CardGroup cols={4}>
+  <Card title="Source APIs" icon="plug">
+    Procore, Sage, P6, and other connected systems
+  </Card>
+  <Card title="Kroo Pipeline" icon="arrow-right-arrow-left">
+    Fetch, flatten, and normalize raw data
+  </Card>
+  <Card title="Data Warehouse" icon="database">
+    Organized and structured tables
+  </Card>
+  <Card title="Analytics" icon="chart-bar">
+    PowerBI dashboards and SQL reporting
+  </Card>
+</CardGroup>
 
 ## Data Modeling Approach
 
@@ -85,6 +101,7 @@ Here's how we process a typical RFI response from Procore:
 
 - **`_partner_id`** - Internal identifier used by Kroo's sync system
 - **`_data_type`** - Internal classification used for pipeline processing
+- **`_fivetran_synced`** - Timestamp of when the record was last created or edited in the system
 - **`_fivetran_deleted`** - Soft delete flag (exception: this field MUST be used in WHERE clauses)
 
 **Best Practice:** When building queries and views, focus on the business columns that come from your source systems. The only internal metadata column you should regularly use is `_fivetran_deleted = 0` to filter out soft-deleted records.
