@@ -47,6 +47,14 @@
         "tab": "Guides",
         "groups": [
           {
+            "group": "Using the App",
+            "pages": [
+              "pipeline-analytics",
+              "embed-dashboards",
+              "analytics-modules"
+            ]
+          },
+          {
             "group": "Analytics",
             "pages": [
               "sql-views-and-basics",

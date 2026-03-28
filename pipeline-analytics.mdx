@@ -1,0 +1,67 @@
+---
+title: "Pipeline Analytics"
+description: "Monitor API utilization and sync activity for your connected integrations"
+icon: "chart-line"
+---
+
+<CardGroup cols={4}>
+  <Card title="API Utilization" icon="gauge-high">
+    Track how much of your rate limit is being used in real time
+  </Card>
+  <Card title="Sync Schedule" icon="calendar-clock">
+    See when each endpoint last synced and when the next sync is due
+  </Card>
+  <Card title="Manual Sync" icon="rotate">
+    Trigger an immediate sync on any individual endpoint
+  </Card>
+  <Card title="API Call History" icon="chart-bar">
+    View a 24-hour call volume chart per endpoint
+  </Card>
+</CardGroup>
+
+## Navigating to Pipeline Analytics
+
+<Steps>
+<Step title="Open Pipeline Analytics">
+  Go directly to [app.getkroo.com/?tab=analytics](https://app.getkroo.com/?tab=analytics) or click **Pipeline Analytics** in the sidebar from the home page.
+</Step>
+
+<Step title="Choose an integration">
+  Select an integration (e.g., Procore) from the dropdown to load its pipeline data.
+</Step>
+</Steps>
+
+## API Utilization Rate
+
+At the top of the page, the **API Utilization Rate** bar shows how much of your rate limit is being consumed.
+
+| Metric | Description |
+|--------|-------------|
+| **Average** | Your average request rate over the past 48 hours |
+| **Max (1 hour)** | The highest hourly request volume in the 48-hour window |
+| **Rate Limit** | The maximum number of requests allowed per hour |
+
+<Warning>
+If the status shows **Elevated** or **Critical**, your API usage is approaching the rate limit. Review your sync configuration to reduce unnecessary calls.
+</Warning>
+
+## Pipeline Table
+
+Below the utilization bar, a table lists every endpoint for the selected integration:
+
+| Column | Description |
+|--------|-------------|
+| **Endpoint** | The name of the data pipeline (e.g., Accident logs, Budget views) |
+| **Sync Frequency** | How often the pipeline syncs (e.g., 1 day, 4 hours) |
+| **Last Synced At** | Timestamp of the most recent successful sync |
+| **Next Sync At** | When the next sync is scheduled |
+| **API Calls (24h)** | Total API calls made by this endpoint in the last 24 hours |
+
+Each row also has two actions on the right:
+
+- **Refresh icon** — triggers an immediate sync for that specific endpoint
+- **Graph icon** — opens a chart of API call volume over the last 24 hours for that endpoint
+
+## Support
+
+For questions about pipeline activity or elevated API usage, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).

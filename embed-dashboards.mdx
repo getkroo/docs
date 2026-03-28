@@ -1,0 +1,65 @@
+---
+title: "Embed Dashboards"
+description: "Embed PowerBI reports into Kroo and manage who has access to them"
+icon: "chart-mixed"
+---
+
+Kroo lets you embed PowerBI reports directly into the app and control which users can view each dashboard.
+
+## Prerequisites
+
+- **Admin role** in your Kroo organization
+- A published PowerBI report with a Workspace ID and Report ID
+
+## Embedding a PowerBI Report 
+
+<Steps>
+<Step title="Navigate to Dashboards">
+  From the top bar, go to **Insights** → **Dashboards**.
+</Step>
+
+<Step title="Open the embed dialog">
+  Click **Embed PowerBI** in the top right corner of the page.
+</Step>
+
+<Step title="Fill in the report details">
+  Complete the form with the following fields:
+
+  | Field | Description |
+  |-------|-------------|
+  | **Workspace ID** | Found in your PowerBI URL: `https://app.powerbi.com/groups/`**WorkspaceID**`/` |
+  | **Report ID** | Found in your PowerBI URL: `https://app.powerbi.com/groups/WorkspaceID/reports/`**ReportID** |
+  | **Display name** | The name shown for this dashboard inside Kroo |
+  | **Report description** | A short description of what the report contains |
+</Step>
+
+<Step title="Submit">
+  Click **Submit** to add the dashboard. It will appear in your Dashboards list immediately.
+</Step>
+</Steps>
+
+## Managing Dashboard Permissions
+
+By default, all admin users have access to every embedded dashboard. To control access for other users:
+
+<Steps>
+<Step title="Open dashboard options">
+  From the **Dashboards** list, find the dashboard you want to manage and click the **three-dot menu** (`⋯`) on its card.
+</Step>
+
+<Step title="Open Permissions">
+  Click **Permissions** from the dropdown menu.
+</Step>
+
+<Step title="Grant access to users">
+  Select the users you want to give access to this dashboard and save. Only the users you select will be able to view it.
+
+  <Info>
+  Admin users always have access to all dashboards regardless of individual permission settings.
+  </Info>
+</Step>
+</Steps>
+
+## Support
+
+For help with embedding reports or configuring access, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
