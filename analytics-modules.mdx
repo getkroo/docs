@@ -1,9 +1,41 @@
 ---
-title: "Data Analytics Modules"
-description: "Explore the analytics modules available in the Kroo app"
-icon: "chart-pie"
+title: "Personalize Your Data"
+description: "Search, rename, and organize your data catalog to match your team's business logic"
+icon: "sliders"
 ---
 
-<Info>
-This page is coming soon. Contact [implementations@getkroo.com](mailto:implementations@getkroo.com) for help with Data Analytics Modules.
-</Info>
+## Searching the Catalog
+
+Use the catalog's search to find anything in your warehouse — columns, views, schemas, or tables — from one place.
+
+- **Search by name** — find a table or column by any part of its name
+- **Browse by schema** — explore all objects within a specific integration (e.g., `kroo_procore`)
+
+## Naming for Your Business
+
+Rename columns and tables to match the terminology your team already uses — no SQL knowledge required.
+
+- Rename `procore_commitment_change_orders` to **"Change Orders"**
+- Rename a column like `executed_date` to **"Approved Date"**
+
+This keeps the underlying data intact while making everything feel familiar to business users.
+
+## Designating Sources of Truth
+
+Mark specific views or aggregates as your team's official source of truth for a given topic.
+
+- Designate a budget view as the **canonical cost table** for reporting
+- Pin aggregated views to the top of search results
+- Prevent confusion when multiple tables contain similar data
+
+## AI-Ready Data
+
+You can also allocate specific tables for use by Kris, Kroo's AI assistant. Designating sources of truth and using familiar naming directly improves the quality of AI-generated responses.
+
+<Tip>
+✨ **Kris gets smarter when your data is organized.** The names, views, and sources of truth you set here are exactly what Kris uses to understand your warehouse. Better structure = better AI answers.
+</Tip>
+
+## Support
+
+For help setting up your catalog, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
