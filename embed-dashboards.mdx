@@ -4,12 +4,75 @@ description: "Embed PowerBI reports into Kroo and manage who has access to them"
 icon: "chart-mixed"
 ---
 
+Kroo can embed your Power BI reports directly into the platform so your team can view dashboards without leaving the app. This guide covers the Power BI licensing requirements, first-time Azure setup, and how to embed and manage reports.
+
+## Power BI Requirements
+
+<Warning>
+Embedding Power BI reports into Kroo requires your workspace to be backed by a **dedicated capacity**. Power BI Pro licenses alone are not sufficient. If your workspace lacks capacity, embedding will fail when Kroo attempts to generate an embed token.
+</Warning>
+
+### Required Power BI plan
+
+Kroo uses the [embed for your customers](https://learn.microsoft.com/en-us/power-bi/developer/embedded/embedded-analytics-power-bi#embed-for-your-customers) pattern with a service principal. This requires your Power BI workspace to be assigned to one of the following capacity types:
+
+| Capacity type | SKUs | Purchase via |
+|---|---|---|
+| **Microsoft Fabric** | F2 and above | [Azure portal](https://portal.azure.com) |
+| **Power BI Embedded** | A1 (EM1) and above | [Azure portal](https://portal.azure.com) |
+| **Power BI Premium** | P1 and above | Microsoft 365 admin center |
+
+<Info>
+**Premium Per User (PPU) is not supported.** While PPU gives individual users access to Premium features, Microsoft does not support it for the [embed token API](https://learn.microsoft.com/en-us/rest/api/power-bi/embed-token/generate-token) or the [export API](https://learn.microsoft.com/en-us/power-bi/developer/embedded/export-to) that Kroo uses for PDF exports.
+</Info>
+
+For full details on capacity sizing and costs, see Microsoft's [Capacity and SKUs](https://learn.microsoft.com/en-us/power-bi/developer/embedded/embedded-capacity) documentation.
+
+### What won't work
+
+- **Power BI Pro only** — Pro is a per-user license. The embed token API returns a `403 Forbidden` when the workspace is not backed by a dedicated capacity ([source](https://learn.microsoft.com/en-us/power-bi/developer/embedded/move-to-production)).
+- **Power BI Free** — No embedding capability.
+- **Premium Per User (PPU)** — Not supported for embed token generation or PDF export ([source](https://learn.microsoft.com/en-us/power-bi/developer/embedded/export-to#license-requirements)).
+
 ## Prerequisites
 
 - **Admin role** in your Kroo organization
-- A published PowerBI report with a Workspace ID and Report ID
+- A Power BI workspace backed by a **Premium, Embedded, or Fabric capacity** (see above)
+- A published Power BI report in that workspace
+- An **Azure AD administrator** who can grant consent to the Kroo application
 
-## Embedding a PowerBI Report 
+## First-Time Azure Setup
+
+Before embedding your first report, your Azure AD admin must authorize the Kroo application and grant it access to your Power BI workspace. This only needs to be done once per organization.
+
+<Steps>
+<Step title="Grant admin consent to the Kroo app">
+  Your Azure AD admin must visit the link below and approve the permissions. This authorizes the Kroo service principal to access Power BI APIs in your tenant.
+
+  [Grant admin consent](https://login.microsoftonline.com/common/adminconsent?client_id=370459f4-6e16-4274-8f6c-9c41f169c366)
+
+  For background on why this is needed, see Microsoft's [service principal embedding guide](https://learn.microsoft.com/en-us/power-bi/developer/embedded/embed-service-principal).
+</Step>
+
+<Step title="Enable service principal API access (if not already enabled)">
+  In the **Power BI Admin portal**, go to **Tenant settings** → **Developer settings** and verify these are enabled:
+
+  - **Embed content in apps**
+  - **Allow service principals to use Power BI APIs**
+
+  These can be scoped to a specific security group if needed. See [Microsoft's documentation](https://learn.microsoft.com/en-us/power-bi/developer/embedded/embed-service-principal#step-3---enable-the-power-bi-service-admin-settings) for details.
+</Step>
+
+<Step title="Add the Kroo app to your Power BI workspace">
+  In Power BI, go to your workspace → **Manage access** → **Add people or groups**. Search for the Kroo application and add it as a **Member**.
+
+  <Warning>
+  The Kroo app must be added as a **Member** (not Viewer). Viewer access is not sufficient for embed token generation.
+  </Warning>
+</Step>
+</Steps>
+
+## Embedding a Power BI Report
 
 <Steps>
 <Step title="Navigate to Dashboards">
@@ -20,13 +83,16 @@ icon: "chart-mixed"
   Click **Embed PowerBI** in the top right corner of the page.
 </Step>
 
-<Step title="Fill in the report details">
-  Complete the form with the following fields:
+<Step title="Paste your report URL">
+  Copy the full URL from your Power BI report and paste it into the **Power BI report URL** field. Kroo will automatically extract the workspace and report IDs.
+
+  The URL should look like: `https://app.powerbi.com/groups/{workspaceId}/reports/{reportId}`
+
+  Then fill in the remaining fields:
 
   | Field | Description |
   |-------|-------------|
-  | **Workspace ID** | Found in your PowerBI URL: `https://app.powerbi.com/groups/`**WorkspaceID**`/` |
-  | **Report ID** | Found in your PowerBI URL: `https://app.powerbi.com/groups/WorkspaceID/reports/`**ReportID** |
+  | **Power BI report URL** | The full URL of your published Power BI report |
   | **Display name** | The name shown for this dashboard inside Kroo |
   | **Report description** | A short description of what the report contains |
 </Step>
@@ -57,6 +123,15 @@ By default, all admin users have access to every embedded dashboard. To control 
   </Info>
 </Step>
 </Steps>
+
+## Troubleshooting
+
+| Symptom | Likely cause |
+|---|---|
+| Report fails to load with a 403 error | Workspace is not assigned to a Premium/Embedded/Fabric capacity, or the Kroo service principal has not been added as a workspace Member |
+| "Unable to create the report" on submit | The report URL is invalid, the report doesn't exist, or the Kroo app doesn't have access to the workspace |
+| PDF export fails | Workspace is not backed by capacity, or the report uses unsupported visuals (R visuals, Python visuals, PowerApps). See [Microsoft's export limitations](https://learn.microsoft.com/en-us/power-bi/developer/embedded/export-to#considerations-and-limitations) |
+| Admin consent link returns an error | Your Azure AD admin may need to enable third-party app consent in Azure AD settings |
 
 ## Support
 
