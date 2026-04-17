@@ -149,6 +149,28 @@ Soft-deleted records containing sensitive information are still present in your 
 </Card>
 </CardGroup>
 
+## Filtering Deleted Records Across Parent & Child Tables
+
+When a record is deleted in your source system, Kroo flags the **parent** record as deleted — but that flag does not automatically flow down to its **child** records. If you query a child table on its own, stale rows may still appear as active.
+
+To get accurate results, join the child table back to its parent and filter both:
+
+```sql
+SELECT
+    li.*
+FROM kroo_procore__direct_cost_line_items li
+INNER JOIN kroo_procore__direct_costs dc
+    ON li.direct_cost_id = dc.id
+WHERE dc._fivetran_deleted = 0
+  AND li._fivetran_deleted = 0
+```
+
+In this example, `kroo_procore__direct_costs` is the parent and `kroo_procore__direct_cost_line_items` is the child. The join ensures any line items belonging to a deleted direct cost are excluded from your results.
+
+<Info>
+Apply this pattern wherever you query child tables in Kroo. Using the parent as your anchor is the most reliable way to keep stale records out of your reports.
+</Info>
+
 ## Need Help?
 
 <Card title="Questions About Data Retention?" icon="question-circle">
