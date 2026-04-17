@@ -49,15 +49,19 @@ Download the Kris Teams bot app package:
 </Step>
 
 <Step title="Grant admin consent">
-  Open the following link in your browser to grant admin consent for Kris in your tenant:
+  Open the following link in your browser to grant admin consent for Kris in your tenant. Replace `[COMPANY_DOMAIN]` with your organization's Microsoft domain (e.g. `yourcompany.com`):
 
-  [Grant Admin Consent](https://login.microsoftonline.com/common/adminconsent?client_id=b3350ee0-1cf6-44e6-b4fb-284cf77b7eac&redirect_uri=https://getkroo.com)
+  [Grant Admin Consent](https://login.microsoftonline.com/[COMPANY_DOMAIN]/adminconsent?client_id=b3350ee0-1cf6-44e6-b4fb-284cf77b7eac&redirect_uri=https://getkroo.com)
 
   Sign in with your Microsoft 365 admin credentials and click **Accept** to approve the required permissions.
 
   <Info>
-  This one-time consent allows Kris to authenticate and operate within your organization. Without it, the bot will not be able to respond to user queries.
+  Kris verifies that the person messaging is a Kroo admin by reading their email address. Without this consent, Teams blocks the permission check and Kris will be unable to authenticate users or respond to queries.
   </Info>
+
+  <Warning>
+  This step must be completed by an **Azure AD administrator**. If the consent link returns an error, your Azure AD admin may need to enable third-party app consent in Azure AD settings first.
+  </Warning>
 </Step>
 </Steps>
 
