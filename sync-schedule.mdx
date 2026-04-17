@@ -1,0 +1,46 @@
+---
+title: "Sync Schedule"
+description: "Configure how often your data pipelines sync and when they're allowed to run"
+icon: "clock"
+---
+
+The Sync Schedule controls how frequently Kroo pulls data from your connected sources, and optionally restricts syncs to specific times or days.
+
+## Basic Settings
+
+<CardGroup cols={2}>
+  <Card title="Time Denomination" icon="hourglass">
+    The unit of frequency for your sync — either **Hours** or **Days**
+  </Card>
+  <Card title="Interval" icon="repeat">
+    How often to sync within that unit — e.g. **Every 1** day syncs once daily
+  </Card>
+</CardGroup>
+
+## Advanced Settings
+
+Expand **Advanced settings (optional)** to access additional controls.
+
+<CardGroup cols={3}>
+  <Card title="Base Start Hour" icon="sun">
+    The time of day the sync cycle begins. Times are shown in **EDT**
+  </Card>
+  <Card title="Days of Week" icon="calendar-week">
+    Restrict syncs to specific weekdays. Leave all unchecked to allow any day
+  </Card>
+  <Card title="Days of Month" icon="calendar-days">
+    Restrict syncs to specific dates (1–31 or **Last day**). Leave unchecked to allow any date
+  </Card>
+</CardGroup>
+
+### Time Constraints
+
+Toggle **Time constraints** on to restrict syncs to specific windows. When active, syncs will only run during the days and times you configure.
+
+<Info>
+Time constraints are useful for avoiding syncs during business hours or limiting activity to overnight windows when API load is lower.
+</Info>
+
+## Support
+
+For help configuring your sync schedule, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
