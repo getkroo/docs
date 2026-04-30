@@ -1,0 +1,90 @@
+---
+title: "Row-Level Permissions"
+description: "Restrict what data the Kris AI can access for specific user groups"
+icon: "filter"
+---
+
+Row-Level Permissions (RLP) control what data the Kris AI can query on behalf of a user. Rather than restricting access to an entire table, RLP lets you filter a table down to specific rows — for example, only projects in a specific region, or only data for a specific company.
+
+RLP is organized around **groups**. A group defines a set of table access rules. Users assigned to a group inherit those rules.
+
+## Creating a Group
+
+<Steps>
+<Step title="Navigate to Row-Level Permissions">
+  Go to **Settings** > **Permissions** > **Row-Level Permissions**.
+</Step>
+
+<Step title="Create a new group">
+  Click **New Group** and give it a descriptive name (e.g., "West Region PMs" or "Subcontractor – Acme").
+</Step>
+
+<Step title="Add members">
+  Add users to the group. See the [Members](#members) section below for details.
+</Step>
+
+<Step title="Configure table access">
+  Add one or more Kroo tables and define the filter rules for each. See [Table Access](#table-access) below.
+</Step>
+</Steps>
+
+## Table Access
+
+Each group can have access to one or more Kroo tables. For each table, you define a filter type:
+
+<Tabs>
+  <Tab title="No Filter (Full Access)">
+    The user can see **all rows** in this table. Use this when the table doesn't contain sensitive data or when the user should have unrestricted access to it.
+  </Tab>
+  <Tab title="Conditions">
+    Build a row filter using the point-and-click condition builder. Multiple conditions can be combined.
+
+    | Field | Description |
+    |-------|-------------|
+    | **Column** | Select the column to filter on (e.g., `project_id`, `company`, `region`) |
+    | **Operator** | Choose a comparison: `equals`, `not equals`, `contains`, `greater than`, `less than`, etc. |
+    | **Value** | Enter the value to match (e.g., `123`, `West`, `Active`) |
+
+    When multiple conditions are added, choose a logic mode:
+
+    - **ALL conditions must match (AND)** — every condition must be true for a row to be visible
+    - **ANY condition must match (OR)** — at least one condition must be true
+
+    **Example:** to restrict a user to only see Project ID 123 in the `kroo_procore.projects` table, set Column = `project_id`, Operator = `equals`, Value = `123`.
+
+    Click **+ Add Condition** to add more conditions. Click **Remove** to delete a condition. Click **Save Filter** when done.
+  </Tab>
+  <Tab title="Raw SQL">
+    Write a custom SQL `WHERE` clause for advanced filtering. This is useful when conditions are complex or need to reference other columns dynamically. The clause is applied as a `WHERE` filter against the table before Kris queries it.
+
+    ```sql
+    region = 'West' AND status != 'Closed'
+    ```
+
+    <Warning>
+    Raw SQL filters are powerful but bypass the condition builder's validation. Double-check your syntax before saving.
+    </Warning>
+  </Tab>
+</Tabs>
+
+<Info>
+Use the **Explore Table Data** link to preview the table's columns and sample rows before building your filter.
+</Info>
+
+## Members
+
+Each group has a members list. Add users to the group to apply the group's table access rules to them.
+
+A user can belong to **multiple groups** — their effective access is the union of all groups they belong to.
+
+## Testing Permissions
+
+Admins can use the **Test as User** function in Kris settings to impersonate any user and verify that permissions are working correctly. When active, Kris will only query data that the selected user has access to.
+
+<Tip>
+After configuring a new group, use **Test as User** to confirm the filters are returning the expected results before notifying your team.
+</Tip>
+
+## Support
+
+For help setting up Row-Level Permissions, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).

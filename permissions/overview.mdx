@@ -1,0 +1,31 @@
+---
+title: "Permissions Overview"
+description: "Control who can access what data in Kroo"
+icon: "shield-halved"
+---
+
+Kroo provides two layers of permissions to help you control data access across your organization. Use them together or independently depending on your security requirements.
+
+<Info>
+**Admin users** bypass all permission restrictions and have full, unrestricted access to every destination, integration, and table in Kroo.
+</Info>
+
+<CardGroup cols={2}>
+  <Card title="Access Control" icon="lock" href="/permissions/access-control">
+    Control which users can query specific data warehouses or view specific integration pipelines. Use this to restrict access at the destination and integration level.
+  </Card>
+  <Card title="Row-Level Permissions" icon="filter" href="/permissions/row-level-permissions">
+    Fine-grained filtering within the Kris AI so users only see data relevant to their role — such as their region's projects or only active records.
+  </Card>
+</CardGroup>
+
+## When to use each layer
+
+| Layer | Use case |
+|-------|----------|
+| **Access Control** | A project controller should only query Snowflake, not Fabric. A field team doesn't need to see Sage Intacct pipelines. |
+| **Row-Level Permissions** | A regional PM should only see projects in their region when asking Kris questions. A subcontractor should only see their own company's data. |
+
+## Support
+
+For help configuring permissions, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
