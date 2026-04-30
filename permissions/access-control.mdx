@@ -1,16 +1,10 @@
 ---
 title: "Access Control"
 description: "Manage user access to data destinations and partner integrations"
-icon: "lock"
+icon: "key"
 ---
 
-Kroo lets you control access at two levels: **data destinations** (your data warehouse) and **partner integrations** (Procore, Sage Intacct, Autodesk Forma, etc.).
-
-## Admin Users
-
-Admin users are super admins — they have unrestricted access to all destinations and all integrations automatically. No configuration needed.
-
-## Non-Admin Users
+## Configuring Non-Admin Users
 
 Non-admin users have **no access by default**. Access must be explicitly granted per destination or per integration.
 
@@ -18,21 +12,15 @@ Non-admin users have **no access by default**. Access must be explicitly granted
   <Tab title="Data Destinations">
     Data destinations include warehouses like **Fabric**, **Snowflake**, and **Azure SQL**.
 
-    | Access granted | Access not granted |
-    |----------------|-------------------|
-    | The user can run SQL queries against that warehouse via Kroo's **Data Viewer** | The user cannot query that destination at all |
-
-    Each destination has a toggle in the **Permissions** tab of Settings. Grant access to let users query that specific warehouse.
+    When a user has access to a destination, they can run SQL queries against that warehouse via Kroo's **Data Viewer**. Without access, the destination is completely hidden.
   </Tab>
   <Tab title="Partner Integrations">
     Partner integrations include **Procore**, **Sage Intacct**, **Autodesk Forma**, and others.
 
-    | Access granted | Access not granted |
-    |----------------|-------------------|
-    | The user can view **Pipeline Analytics** for that integration and adjust pipeline/sync settings | The integration is not visible to that user at all |
+    When a user has access to an integration, they can view its **Pipeline Analytics** and adjust sync settings. Without access, the integration is completely hidden.
 
     <Tip>
-    Use integration-level access to reduce mental load. For example, a controller who only works with financial data doesn't need to see Autodesk Forma pipelines.
+    Hide integrations a user doesn't need to create a leaner, more focused experience — for example, a controller who only works with financial data doesn't need to see Autodesk Forma pipelines.
     </Tip>
   </Tab>
 </Tabs>
@@ -41,7 +29,7 @@ Non-admin users have **no access by default**. Access must be explicitly granted
 
 <Steps>
 <Step title="Open Permissions settings">
-  Go to **Settings** > **Permissions**.
+  Go to [**Settings > Permissions**](https://app.getkroo.com/settings?tab=permissions).
 </Step>
 
 <Step title="Find the user">

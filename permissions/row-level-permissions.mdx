@@ -1,32 +1,23 @@
 ---
 title: "Row-Level Permissions"
-description: "Restrict what data the Kris AI can access for specific user groups"
+description: "Restrict what data Kris can access for specific user groups"
 icon: "filter"
 ---
 
-Row-Level Permissions (RLP) control what data the Kris AI can query on behalf of a user. Rather than restricting access to an entire table, RLP lets you filter a table down to specific rows — for example, only projects in a specific region, or only data for a specific company.
+<CardGroup cols={4}>
+  <Card title="Create Group" icon="users" />
+  <Card title="Add Members" icon="user-plus" />
+  <Card title="Set Filters" icon="filter" />
+  <Card title="Test & Launch" icon="rocket" />
+</CardGroup>
+
+Along with restricting access to an entire table, RLP also lets you filter a table down to specific rows — for example, only projects in a specific region, or only data for a specific company.
 
 RLP is organized around **groups**. A group defines a set of table access rules. Users assigned to a group inherit those rules.
 
-## Creating a Group
-
-<Steps>
-<Step title="Navigate to Row-Level Permissions">
-  Go to **Settings** > **Permissions** > **Row-Level Permissions**.
-</Step>
-
-<Step title="Create a new group">
-  Click **New Group** and give it a descriptive name (e.g., "West Region PMs" or "Subcontractor – Acme").
-</Step>
-
-<Step title="Add members">
-  Add users to the group. See the [Members](#members) section below for details.
-</Step>
-
-<Step title="Configure table access">
-  Add one or more Kroo tables and define the filter rules for each. See [Table Access](#table-access) below.
-</Step>
-</Steps>
+<Tip>
+After configuring a new group, use **Test as User** in Kris AI Context Settings to confirm the filters are returning the expected results before launching RLP org wide!
+</Tip>
 
 ## Table Access
 
@@ -61,9 +52,6 @@ Each group can have access to one or more Kroo tables. For each table, you defin
     region = 'West' AND status != 'Closed'
     ```
 
-    <Warning>
-    Raw SQL filters are powerful but bypass the condition builder's validation. Double-check your syntax before saving.
-    </Warning>
   </Tab>
 </Tabs>
 
@@ -77,13 +65,25 @@ Each group has a members list. Add users to the group to apply the group's table
 
 A user can belong to **multiple groups** — their effective access is the union of all groups they belong to.
 
-## Testing Permissions
+## Creating a Group
 
-Admins can use the **Test as User** function in Kris settings to impersonate any user and verify that permissions are working correctly. When active, Kris will only query data that the selected user has access to.
+<Steps>
+<Step title="Navigate to Row-Level Permissions">
+  Go to [**Settings > Permissions > Row-Level Permissions**](https://app.getkroo.com/settings?tab=permissions).
+</Step>
 
-<Tip>
-After configuring a new group, use **Test as User** to confirm the filters are returning the expected results before notifying your team.
-</Tip>
+<Step title="Create a new group">
+  Click **New Group** and give it a descriptive name (e.g., "West Region PMs" or "Subcontractor – Acme").
+</Step>
+
+<Step title="Add members">
+  Add users to the group. See the [Members](#members) section above for details.
+</Step>
+
+<Step title="Configure table access">
+  Add one or more Kroo tables and define the filter rules for each. See [Table Access](#table-access) above.
+</Step>
+</Steps>
 
 ## Support
 

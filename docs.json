@@ -21,14 +21,6 @@
             ]
           },
           {
-            "group": "Permissions",
-            "pages": [
-              "permissions/overview",
-              "permissions/access-control",
-              "permissions/row-level-permissions"
-            ]
-          },
-          {
             "group": "Data Lifecycle",
             "pages": [
               "record-deletion",
@@ -63,6 +55,14 @@
             "pages": [
               "sql-views-and-basics",
               "data-viewer"
+            ]
+          },
+          {
+            "group": "Permissions",
+            "pages": [
+              "permissions/overview",
+              "permissions/access-control",
+              "permissions/row-level-permissions"
             ]
           },
           {
