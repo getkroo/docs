@@ -81,6 +81,7 @@
             "group": "Setup",
             "pages": [
               "kris-teams-bot",
+              "kris-mcp-setup",
               "windows-desktop-app"
             ]
           },

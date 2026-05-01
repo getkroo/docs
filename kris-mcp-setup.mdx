@@ -1,0 +1,176 @@
+---
+title: "Kris MCP Setup"
+description: "Connect Kris MCP to Microsoft Copilot Studio, Claude, or ChatGPT"
+icon: "plug"
+---
+
+## Setup Flow
+
+<CardGroup cols={3}>
+  <Card title="Create or Open" icon="user-plus">
+    Start in Copilot Studio, Claude, or ChatGPT.
+  </Card>
+  <Card title="Connect Kris" icon="key">
+    Provide the Kris MCP details and authorize with OAuth 2.0.
+  </Card>
+  <Card title="Ask Your Data" icon="sparkles">
+    Ask questions and get answers grounded in your authorized Kroo data.
+  </Card>
+</CardGroup>
+
+Kris MCP lets supported AI assistants connect to Kris tools over HTTPS. Use the same server URL in each client:
+
+```text
+https://api.getkroo.com/api/v3/mcp
+```
+
+<Info>
+Kris MCP uses OAuth 2.0. During setup, each user signs in with their Kroo account and grants access through the browser-based authorization flow.
+</Info>
+
+
+## Setup Instructions
+
+<Tabs>
+  <Tab title="Copilot Studio">
+    Use these steps to create a new Microsoft Copilot Studio agent and add Kris MCP to it.
+
+    <Steps>
+      <Step title="Open Copilot Studio">
+        Go to [Copilot Studio](https://copilotstudio.microsoft.com) and sign in.
+      </Step>
+
+      <Step title="Create a new agent">
+        Create a new agent for Kris.
+      </Step>
+
+      <Step title="Open the agent tools page">
+        Go to the new agent's **Tools** page and select **Add a tool**.
+      </Step>
+
+      <Step title="Choose Model Context Protocol">
+        Select **Model Context Protocol**.
+      </Step>
+
+      <Step title="Enter the Kris server details">
+        Add the Kris MCP information:
+
+        - **Server name**: `Kris MCP`
+        - **Server description**: `Use Kris tools to work with authorized construction project data.`
+        - **Server URL**: `https://api.getkroo.com/api/v3/mcp`
+      </Step>
+
+      <Step title="Set authentication">
+        For authentication type, select **OAuth 2.0**.
+
+        For OAuth 2.0 type, select **Dynamic discovery**.
+      </Step>
+
+      <Step title="Add Kris to the agent">
+        Select **Create**, then select **Add to agent**. When prompted, complete the Kroo OAuth 2.0 login flow in your browser.
+      </Step>
+    </Steps>
+
+    <Info>
+    Copilot Studio supports the streamable MCP transport. Use the Kris URL above as the server URL.
+    </Info>
+  </Tab>
+
+  <Tab title="Claude">
+    Use these steps for Claude web or Claude Desktop custom connectors.
+
+    <Steps>
+      <Step title="Open connector settings">
+        In Claude, go to **Customize** > **Connectors**.
+
+        For Team or Enterprise workspaces, an Owner or Primary Owner may need to add the connector from **Organization settings** > **Connectors** first.
+      </Step>
+
+      <Step title="Add a custom connector">
+        Click the **+** button, then select **Add custom connector**.
+      </Step>
+
+      <Step title="Enter connector details">
+        Use these values:
+
+        - **Name**: `Kris`
+        - **URL**: `https://api.getkroo.com/api/v3/mcp`
+
+        Leave advanced OAuth client fields blank.
+      </Step>
+
+      <Step title="Connect and sign in">
+        Click **Add**, then click **Connect** on the Kris connector and complete the Kroo OAuth 2.0 login flow.
+      </Step>
+
+      <Step title="Enable Kris in a conversation">
+        In a Claude chat, open the **+** menu, choose **Connectors**, and turn on Kris for the conversation.
+      </Step>
+    </Steps>
+
+    <Info>
+    Claude connects to remote MCP servers from Anthropic's cloud infrastructure, so the server must be reachable over the public internet. The Kris MCP endpoint above is public HTTPS.
+    </Info>
+  </Tab>
+
+  <Tab title="ChatGPT">
+    Use these steps for ChatGPT custom MCP apps or connectors.
+
+    <Steps>
+      <Step title="Enable developer mode">
+        In ChatGPT, go to **Settings** > **Apps & Connectors** > **Advanced settings**, then turn on **Developer mode**.
+
+        If you are in a managed workspace, an admin or owner may need to allow developer mode first.
+      </Step>
+
+      <Step title="Create a custom app or connector">
+        From **Settings** > **Apps & Connectors**, click **Create**.
+      </Step>
+
+      <Step title="Enter connector metadata">
+        Use these values:
+
+        - **Name**: `Kris`
+        - **Description**: `Use Kris tools to work with authorized construction project data.`
+        - **Connector URL**: `https://api.getkroo.com/api/v3/mcp`
+        - **Authentication**: OAuth 2.0
+      </Step>
+
+      <Step title="Create and authorize">
+        Click **Create**. When ChatGPT starts the authorization flow, sign in with your Kroo account and approve the requested access.
+      </Step>
+
+      <Step title="Use Kris in chat">
+        Start a new chat, click the **+** button near the composer, choose **More**, and select Kris from the available apps or connectors.
+      </Step>
+    </Steps>
+
+    <Info>
+    ChatGPT product screens may use **Apps**, **Connectors**, or **Apps & Connectors** depending on your workspace. Use the page that lets you create a custom remote MCP connection.
+    </Info>
+</Tab>
+</Tabs>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The OAuth window does not open">
+    Allow browser pop-ups for your AI client, then retry the connection. If the client already saved a failed authorization attempt, remove the Kris MCP server and add it again.
+  </Accordion>
+
+  <Accordion title="Chatbot is not querying Kroo">
+    Click the **+** button in the chat, open the app or connector picker, and make sure **Kris MCP** is enabled for that conversation. 
+  </Accordion>
+
+
+  <Accordion title="The assistant cannot access expected data">
+    Kris follows the row-level permissions configured by your admin. Make sure your relevant project and department information is available in the Kroo platform and included in the permissions for the signed-in user.
+  </Accordion>
+</AccordionGroup>
+
+## References
+
+- [Microsoft Copilot Studio MCP documentation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent)
+- [Microsoft Copilot Studio create agent documentation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-first-bot)
+- [Claude custom connectors documentation](https://support.claude.com/en/articles/11175166-how-do-i-connect-mcp-servers-to-claude-ai)
+- [ChatGPT developer mode documentation](https://platform.openai.com/docs/developer-mode)
