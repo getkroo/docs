@@ -58,6 +58,14 @@
             ]
           },
           {
+            "group": "Permissions",
+            "pages": [
+              "permissions/overview",
+              "permissions/access-control",
+              "permissions/row-level-permissions"
+            ]
+          },
+          {
             "group": "Integrations",
             "pages": [
               "p6-opc-file-uploads",
@@ -73,6 +81,7 @@
             "group": "Setup",
             "pages": [
               "kris-teams-bot",
+              "kris-mcp-setup",
               "windows-desktop-app"
             ]
           },

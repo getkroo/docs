@@ -1,0 +1,54 @@
+---
+title: "Access Control"
+description: "Manage user access to data destinations and partner integrations"
+icon: "key"
+---
+
+## Configuring Non-Admin Users
+
+Non-admin users have **no access by default**. Access must be explicitly granted per destination or per integration.
+
+<Tabs>
+  <Tab title="Data Destinations">
+    Data destinations include warehouses like **Fabric**, **Snowflake**, and **Azure SQL**.
+
+    When a user has access to a destination, they can run SQL queries against that warehouse via Kroo's **Data Viewer**. Without access, the destination is completely hidden.
+  </Tab>
+  <Tab title="Partner Integrations">
+    Partner integrations include **Procore**, **Sage Intacct**, **Autodesk Forma**, and others.
+
+    When a user has access to an integration, they can view its **Pipeline Analytics** and adjust sync settings. Without access, the integration is completely hidden.
+
+    <Tip>
+    Hide integrations a user doesn't need to create a leaner, more focused experience — for example, a controller who only works with financial data doesn't need to see Autodesk Forma pipelines.
+    </Tip>
+  </Tab>
+</Tabs>
+
+## How to Configure
+
+<Steps>
+<Step title="Open Permissions settings">
+  Go to [**Settings > Permissions**](https://app.getkroo.com/settings?tab=permissions).
+</Step>
+
+<Step title="Find the user">
+  Locate the user you want to configure in the user list.
+</Step>
+
+<Step title="Manage access">
+  Under each destination or integration, click **Manage**.
+</Step>
+
+<Step title="Toggle access">
+  Toggle access on or off for each destination or integration.
+</Step>
+
+<Step title="Save changes">
+  Click **Save** to apply the updated permissions.
+</Step>
+</Steps>
+
+## Support
+
+For help configuring access control, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
