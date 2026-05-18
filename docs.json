@@ -96,7 +96,7 @@
       },
       {
         "tab": "API Reference",
-        "openapi": "https://api.getkroo.com/api/v3/openapi"
+        "openapi": "https://api.getkroo.com/api/v3/openapi.yaml"
       }
     ],
     "global": {
