@@ -51,10 +51,11 @@
             ]
           },
           {
-            "group": "Analytics",
+            "group": "Best Practices",
             "pages": [
               "sql-views-and-basics",
-              "data-viewer"
+              "data-viewer",
+              "prompting-guidelines"
             ]
           },
           {

@@ -8,3 +8,22 @@
   height: auto;
   max-height: 64px;
 }
+
+.code-block[language="text"] [data-component-part="code-block-root"],
+.code-block[language="text"] .whitespace-pre,
+.code-block[language="text"] pre,
+.code-block[language="text"] code,
+.code-block[language="text"] .line,
+.code-block[language="text"] .line span {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.code-block[language="text"] pre,
+.code-block[language="text"] code,
+.code-block[language="text"] .line {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
