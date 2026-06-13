@@ -21,6 +21,13 @@
             ]
           },
           {
+            "group": "Kris",
+            "pages": [
+              "meet-kris",
+              "prompting-guidelines"
+            ]
+          },
+          {
             "group": "Data Lifecycle",
             "pages": [
               "record-deletion",
