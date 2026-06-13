@@ -1,6 +1,6 @@
 ---
-title: "Kris MCP Setup"
-description: "Connect Kris MCP to Microsoft Copilot Studio, Claude, or ChatGPT"
+title: "Kroo MCP Setup"
+description: "Connect Kroo MCP to Microsoft Copilot Studio, Claude, or ChatGPT"
 icon: "plug"
 ---
 
@@ -10,22 +10,22 @@ icon: "plug"
   <Card title="Create or Open" icon="user-plus">
     Start in Copilot Studio, Claude, or ChatGPT.
   </Card>
-  <Card title="Connect Kris" icon="key">
-    Provide the Kris MCP details and authorize with OAuth 2.0.
+  <Card title="Connect Kroo MCP" icon="key">
+    Provide the Kroo MCP details and authorize with OAuth 2.0.
   </Card>
   <Card title="Ask Your Data" icon="sparkles">
     Ask questions and get answers grounded in your authorized Kroo data.
   </Card>
 </CardGroup>
 
-Kris MCP lets supported AI assistants connect to Kris tools over HTTPS. Use the same server URL in each client:
+Kroo MCP lets supported AI assistants connect to Kris tools over HTTPS. Use the same server URL in each client:
 
 ```text
 https://api.getkroo.com/api/v3/mcp
 ```
 
 <Info>
-Kris MCP uses OAuth 2.0. During setup, each user signs in with their Kroo account and grants access through the browser-based authorization flow.
+Kroo MCP uses OAuth 2.0. During setup, each user signs in with their Kroo account and grants access through the browser-based authorization flow.
 </Info>
 
 
@@ -33,7 +33,7 @@ Kris MCP uses OAuth 2.0. During setup, each user signs in with their Kroo accoun
 
 <Tabs>
   <Tab title="Copilot Studio">
-    Use these steps to create a new Microsoft Copilot Studio agent and add Kris MCP to it.
+    Use these steps to create a new Microsoft Copilot Studio agent and add Kroo MCP to it.
 
     <Steps>
       <Step title="Open Copilot Studio">
@@ -52,10 +52,10 @@ Kris MCP uses OAuth 2.0. During setup, each user signs in with their Kroo accoun
         Select **Model Context Protocol**.
       </Step>
 
-      <Step title="Enter the Kris server details">
-        Add the Kris MCP information:
+      <Step title="Enter the Kroo MCP server details">
+        Add the Kroo MCP information:
 
-        - **Server name**: `Kris MCP`
+        - **Server name**: `Kroo MCP`
         - **Server description**: `Use Kris tools to work with authorized construction project data.`
         - **Server URL**: `https://api.getkroo.com/api/v3/mcp`
       </Step>
@@ -72,7 +72,7 @@ Kris MCP uses OAuth 2.0. During setup, each user signs in with their Kroo accoun
     </Steps>
 
     <Info>
-    Copilot Studio supports the streamable MCP transport. Use the Kris URL above as the server URL.
+    Copilot Studio supports the streamable MCP transport. Use the Kroo MCP URL above as the server URL.
     </Info>
   </Tab>
 
@@ -109,7 +109,7 @@ Kris MCP uses OAuth 2.0. During setup, each user signs in with their Kroo accoun
     </Steps>
 
     <Info>
-    Claude connects to remote MCP servers from Anthropic's cloud infrastructure, so the server must be reachable over the public internet. The Kris MCP endpoint above is public HTTPS.
+    Claude connects to remote MCP servers from Anthropic's cloud infrastructure, so the server must be reachable over the public internet. The Kroo MCP endpoint above is public HTTPS.
     </Info>
   </Tab>
 
@@ -155,11 +155,11 @@ Kris MCP uses OAuth 2.0. During setup, each user signs in with their Kroo accoun
 
 <AccordionGroup>
   <Accordion title="The OAuth window does not open">
-    Allow browser pop-ups for your AI client, then retry the connection. If the client already saved a failed authorization attempt, remove the Kris MCP server and add it again.
+    Allow browser pop-ups for your AI client, then retry the connection. If the client already saved a failed authorization attempt, remove the Kroo MCP server and add it again.
   </Accordion>
 
   <Accordion title="Chatbot is not querying Kroo">
-    Click the **+** button in the chat, open the app or connector picker, and make sure **Kris MCP** is enabled for that conversation. 
+    Click the **+** button in the chat, open the app or connector picker, and make sure **Kroo MCP** is enabled for that conversation. 
   </Accordion>
 
 

@@ -39,9 +39,9 @@ mint broken-links
 
 ### Documentation Structure
 The site uses a 3-tab navigation organized by user intent:
-- **Platform** tab: Overview (Welcome, Methodology), Data Lifecycle (Record Deletion, Table Snapshots, Historical Backfill), Two-Way Sync (Summary, ACC RFIs, ACC Submittals)
-- **Guides** tab: Analytics (SQL Views & Basics, Data Viewer), Integrations (P6/OPC File Uploads, Pipeline Status & PowerBI)
-- **Admin & Support** tab: Setup (Kris Teams Bot), Maintenance (Manual Data Refresh, Sage On-Prem Troubleshooting)
+- **Platform** tab: Overview (Welcome, Methodology, Meet Kris), Data Lifecycle (Record Deletion, Table Snapshots, Historical Backfill), Two-Way Sync (Summary, ACC RFIs, ACC Submittals)
+- **Guides** tab: Using the App (Pipeline Analytics, Embed Dashboards, Sync Schedule, Analytics Modules, Prompting Guidelines), Analytics (SQL Views & Basics, Data Viewer), Permissions, Integrations (P6/OPC File Uploads, Pipeline Status & PowerBI)
+- **Admin & Support** tab: Setup (Kris Teams Bot, Kroo MCP Setup, Windows Desktop App), Maintenance (Manual Data Refresh, Sage On-Prem Troubleshooting)
 
 ### Content Patterns
 - All content files use `.mdx` format (MDX = Markdown + JSX)

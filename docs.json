@@ -17,14 +17,8 @@
             "group": "Overview",
             "pages": [
               "index",
-              "methodology"
-            ]
-          },
-          {
-            "group": "Kris",
-            "pages": [
-              "meet-kris",
-              "prompting-guidelines"
+              "methodology",
+              "meet-kris"
             ]
           },
           {
@@ -54,7 +48,8 @@
               "pipeline-analytics",
               "embed-dashboards",
               "sync-schedule",
-              "analytics-modules"
+              "analytics-modules",
+              "prompting-guidelines"
             ]
           },
           {
@@ -88,7 +83,7 @@
             "group": "Setup",
             "pages": [
               "kris-teams-bot",
-              "kris-mcp-setup",
+              "kroo-mcp-setup",
               "windows-desktop-app"
             ]
           },
