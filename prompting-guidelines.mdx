@@ -1,0 +1,193 @@
+---
+title: "Prompting Guidelines"
+description: "Use DAC prompts to get clearer construction answers from Kris and other AI tools"
+icon: "wand-magic-sparkles"
+---
+<CardGroup cols={3}>
+  <Card title="Decompose" icon="diagram-project">
+    Break the request into a task list that Kris should explore and perform before providing an answer.
+  </Card>
+  <Card title="Artifacts" icon="file-lines">
+    Add the source material for Kris to mirror results and structure, such as sample emails or generated reports.
+  </Card>
+  <Card title="Context" icon="circle-info">
+    Explain the project, date range, audience, constraints, and decision you need to make.
+  </Card>
+</CardGroup>
+
+## The DAC Template
+
+Copy this structure when you need a reliable answer:
+
+
+
+<Tabs>
+<Tab title="Open AP/AR Aging">
+```text
+Goal:
+Show open accounts payable and accounts receivable by aging bucket.
+
+DAC:
+1. Decompose the analysis into AP invoices, AR invoices, open balances, aging buckets, project/vendor/customer breakdowns, and exclusions.
+2. Use these artifacts: AP invoice table, AR invoice table, payment records, vendor list, customer list, and project list.
+3. Context: This is for a construction finance review. Bucket open invoices into 0-30, 31-60, 61-90, and 90+ days. Exclude void invoices from every total.
+
+Output:
+Return a table with columns: Aging Bucket, Open AP, Open AR, Net Position, Invoice Count, and Notes. Then list any assumptions, including whether aging is based on due date or invoice date.
+```
+</Tab>
+
+<Tab title="RFI Summary">
+```text
+Goal:
+Summarize RFI 042 so the PM can prepare a response to the architect.
+
+DAC:
+1. Decompose the issue into design intent, affected drawings/specs, impacted trades, schedule risk, and open questions.
+2. Use these artifacts: RFI text, drawing A-301, spec section 07 21 00, and the May 12 coordination meeting notes.
+3. Context: This is an occupied hospital renovation. Work is in Area B. The response should help the PM ask the design team for a clear decision.
+
+Output:
+Return 5 bullets: issue, likely interpretation, impacted trades, risks, and questions to ask. Cite the artifact used for each point.
+```
+</Tab>
+
+<Tab title="Schedule Risk">
+```text
+Goal:
+Identify the top schedule risks for next week's OAC meeting.
+
+DAC:
+1. Decompose the analysis into critical activities, delayed predecessors, missing decisions, procurement risks, and trade coordination issues.
+2. Use these artifacts: current P6 lookahead, RFI log, submittal log, procurement log, and last week's meeting minutes.
+3. Context: Focus on work planned in the next 3 weeks. Audience is owner, architect, and GC leadership.
+
+Output:
+Return the top 5 risks with owner, evidence, likely impact, and recommended next action.
+```
+</Tab>
+</Tabs>
+
+
+<Tip>
+If the answer matters for cost, schedule, safety, contract terms, or client communication, ask the AI to list assumptions and missing information before giving the final recommendation.
+</Tip>
+
+## Best Practices
+
+### 1. Ask for the thinking path, not hidden reasoning
+
+Use a clear process:
+
+```text
+Before answering, break this into the checks you need to perform. Then give the final answer in the requested format.
+```
+
+This helps the AI avoid jumping straight to a confident but incomplete answer.
+
+### 2. Name the artifacts clearly
+
+Be specific about what the AI should use:
+
+| Instead of | Use |
+|------------|-----|
+| "Look at the project docs" | "Use RFI log, submittal log, drawing A-401, and spec section 09 91 00" |
+| "Analyze costs" | "Use the change event export, commitment log, and approved budget view" |
+| "Check schedule" | "Use the current P6 file, 3-week lookahead, and procurement log" |
+
+### 3. Define the output before the AI starts
+
+Construction teams usually need decision-ready formats:
+
+- A table for reviews, comparisons, and logs
+- A short narrative for owner updates or change events
+- Bullets for meeting prep
+- A checklist for field follow-up
+- A risk register for leadership review
+
+### 4. Set boundaries
+
+Tell the AI what not to do:
+
+```text
+Do not invent contract requirements.
+Do not include void invoices in aging totals.
+Do not make legal conclusions.
+Do not assume schedule impact unless it is supported by the artifacts.
+```
+
+### 5. Require missing information
+
+Good construction answers should show gaps:
+
+```text
+If information is missing, list what is missing, why it matters, and who likely owns the answer.
+```
+
+### 6. Use examples when tone matters
+
+If you want the AI to match your company's communication style, provide 1-2 examples:
+
+```text
+Match this tone: factual, concise, and owner-facing.
+
+Example:
+"The team is reviewing the added scope against the current drawings and will confirm cost and schedule exposure after subcontractor pricing is received."
+```
+
+## Prompt Quality Checklist
+
+Before sending a prompt, check for these five items:
+
+<Steps>
+<Step title="Decision">
+Is it clear what decision, draft, summary, or analysis you need?
+</Step>
+
+<Step title="Artifacts">
+Did you include or name the source records the AI should rely on?
+</Step>
+
+<Step title="Context">
+Did you include project, trade, dates, audience, and constraints?
+</Step>
+
+<Step title="Format">
+Did you define the output format?
+</Step>
+
+<Step title="Gaps">
+Did you ask for assumptions, missing information, and next steps?
+</Step>
+</Steps>
+
+## Common Fixes
+
+| If the answer is... | Improve the prompt by... |
+|---------------------|---------------------------|
+| Too generic | Add project context, role of the audience, and source artifacts |
+| Too long | Specify the exact number of bullets, rows, or paragraphs |
+| Too confident | Ask for assumptions, evidence, confidence level, and missing information |
+| Missing key records | Name the exact RFIs, specs, drawings, logs, or tables to use |
+| Hard to act on | Request owner, due date, risk, and next action columns |
+
+## A Strong Starting Prompt
+
+```text
+I need help preparing for a construction project review.
+
+Goal:
+Identify the most important open issues that could affect cost, schedule, or owner decisions.
+
+DAC:
+1. Decompose the review into RFIs, submittals, procurement, schedule, change events, and field coordination.
+2. Use these artifacts: [paste or attach current logs, meeting notes, schedule export, and cost report].
+3. Context: [project type], [phase], [audience], [date range], [known constraints].
+
+Output:
+Return a table with columns: Issue, Source Artifact, Why It Matters, Owner, Due Date, Recommended Next Action. Then list assumptions and missing information.
+```
+
+<Warning>
+Only share project data in tools approved by your company. For sensitive contract, personnel, financial, or safety information, follow your internal data handling policies.
+</Warning>
