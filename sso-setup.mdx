@@ -1,0 +1,116 @@
+---
+title: "SSO Setup"
+description: "Configure single sign-on for Kroo with Microsoft Entra ID or Okta"
+icon: "shield-keyhole"
+---
+
+Single sign-on (SSO) lets your organization manage Kroo user authentication through Microsoft Entra ID or Okta.
+
+## Prerequisites
+
+- **Kroo administrator access** to your company's SSO settings in the Kroo app
+- **Identity provider administrator access** for Microsoft Entra ID or Okta
+- Permission to create or update an OAuth/OIDC application in your identity provider
+
+## Setup
+
+Choose your identity provider and enter the required values directly in the Kroo app.
+
+<Tabs>
+  <Tab title="Microsoft Entra ID">
+    Use these steps to configure Microsoft Entra ID as your SSO provider.
+
+    <Steps>
+      <Step title="Configure API permissions in Microsoft Entra">
+        In your Microsoft Entra app registration, grant the required Microsoft Graph API permissions:
+
+        - **User.Read**: Allows Kroo to read the signed-in user's basic profile
+        - **Directory.Read.All**: Allows Kroo to read directory data required for authentication
+
+        <Info>
+        Your Microsoft Entra administrator may need to grant admin consent after adding these permissions.
+        </Info>
+      </Step>
+
+      <Step title="Add the redirect URI">
+        In the app registration, go to **Authentication**, add or edit the **Web** platform, and add this redirect URI:
+
+        ```text
+        https://auth.getkroo.com/api/auth/sso/callback
+        ```
+
+        Microsoft sends users back to this URL after a successful login.
+      </Step>
+
+      <Step title="Create a client secret">
+        In the app registration, go to **Certificates & secrets** and create a new client secret.
+
+        <Warning>
+        Copy the client secret value immediately. Microsoft Entra will not show it again after you leave the page.
+        </Warning>
+      </Step>
+
+      <Step title="Enter Microsoft Entra details in Kroo">
+        In the Kroo app, open your company's SSO settings and enter:
+
+        - **Verified Domain**: The verified email domain users will use to sign in to Kroo, such as `yourcompany.com`
+        - **Provider**: Select **Microsoft Entra ID OIDC**
+        - **Issuer**: `https://login.microsoftonline.com/<tenant-id>/v2.0`, using your Microsoft Entra **Tenant ID** from the app registration overview page. Use the tenant ID GUID, not the qualified tenant name such as `yourcompany.onmicrosoft.com`
+        - **Client ID**: Found on the app registration overview page
+        - **Client Secret**: The secret value generated under **Certificates & secrets**
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="Okta">
+    Use these steps to configure Okta as your SSO provider.
+
+    <Warning>
+    If your organization does not use the default `https://*.okta.com` Okta domain format, contact [implementations@getkroo.com](mailto:implementations@getkroo.com) before setup.
+    </Warning>
+
+    <Steps>
+      <Step title="Create an Okta app integration">
+        In Okta, create a new OIDC app integration for Kroo.
+
+        Use **Web Application** as the application type.
+      </Step>
+
+      <Step title="Add the sign-in redirect URI">
+        In the Okta app integration, add this sign-in redirect URI:
+
+        ```text
+        https://auth.getkroo.com/api/auth/sso/callback
+        ```
+
+        Okta sends users back to this URL after a successful login.
+      </Step>
+
+      <Step title="Assign users or groups">
+        Assign the Kroo Okta app integration to the users or groups that should be able to sign in to Kroo.
+      </Step>
+
+      <Step title="Enter Okta details in Kroo">
+        In the Kroo app, open your company's SSO settings and enter:
+
+        - **Verified Domain**: The verified email domain users will use to sign in to Kroo, such as `yourcompany.com`
+        - **Provider**: Select **Okta**
+        - **Issuer**: Your Okta issuer URL, such as `https://yourcompany.okta.com`
+        - **Client ID**: Found in the Okta app integration
+        - **Client Secret**: Generated for the Okta app integration
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Testing
+
+After saving your SSO settings, test sign-in with a user assigned to the identity provider application. Confirm the user can complete the provider login flow and return to Kroo successfully.
+
+<Tip>
+Keep an existing Kroo administrator session open while testing SSO so you can update settings if the first attempt fails.
+</Tip>
+
+## Support
+
+If you run into issues during setup, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).

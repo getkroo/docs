@@ -82,6 +82,7 @@
           {
             "group": "Setup",
             "pages": [
+              "sso-setup",
               "kris-teams-bot",
               "kroo-mcp-setup",
               "windows-desktop-app"
