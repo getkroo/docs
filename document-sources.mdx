@@ -1,0 +1,93 @@
+---
+title: "Document Sources"
+icon: "folder-open"
+---
+
+Document sources let you index cloud storage folders — such as shared SharePoint sites — so their contents become searchable in Kris. 
+
+## Understanding templates and sources
+
+The **Document sources** page has two sections:
+
+- **Templates** — shared SharePoint folders that are defined once and can be copied by anyone on your team
+- **Your sources** — the folders that are actually indexed and made searchable in Kris
+
+You create a template to point at a SharePoint location, then **copy** that template into your own sources to start indexing it.
+
+<Frame>
+  <img
+    src="/images/document-sources/document-sources-home.png"
+    alt="Document sources page with Templates and Your sources sections"
+  />
+</Frame>
+
+## Create a template
+
+<Steps>
+<Step title="Open Document sources">
+  In the Kroo App, open the **Document sources** page from the sidebar (the folder icon).
+</Step>
+
+<Step title="Start a new template">
+  In the **Templates** section, click **+ New template** in the top-right corner.
+</Step>
+
+<Step title="Fill in the template details">
+  In the **New Document Template** dialog, provide each required field:
+
+  <Frame>
+    <img
+      src="/images/document-sources/new-template-modal.png"
+      alt="New Document Template dialog with SharePoint site selection"
+    />
+  </Frame>
+
+  <Info>
+  You must select a SharePoint site before the **Document Library** dropdown becomes available.
+  </Info>
+</Step>
+
+<Step title="Create the template">
+  Click **Create**. The new template appears in the **Templates** list with an **ACTIVE** status.
+</Step>
+</Steps>
+
+## Copy the template to your sources
+
+Creating a template only defines the shared folder — nothing is indexed until you copy it into your own sources.
+
+<Steps>
+<Step title="Copy the template">
+  In the **Templates** list, find your template and click **Copy** in the **YOUR COPY** column.
+
+  <Frame>
+    <img
+      src="/images/document-sources/copy-template.png"
+      alt="Copy button in the YOUR COPY column of the Templates list"
+    />
+  </Frame>
+</Step>
+
+<Step title="Confirm the source was added">
+  The template now appears under **Your sources** with a **TEMPLATE COPY** badge and an **ACTIVE** status. Kroo begins indexing the folder — the **DOCUMENTS** count and **LAST CRAWLED** time update once the first crawl completes.
+
+  <Frame>
+    <img
+      src="/images/document-sources/template-copy-active.png"
+      alt="Your sources showing the copied template with TEMPLATE COPY badge"
+    />
+  </Frame>
+
+  <Info>
+  A newly copied source shows `0` documents and **Never** for last crawled until the first crawl runs. This can take a few minutes.
+  </Info>
+</Step>
+</Steps>
+
+<Tip>
+To stop indexing a template you copied, click **Remove copy** next to it in the **Templates** list.
+</Tip>
+
+## Support
+
+If you run into issues setting up document sources, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
