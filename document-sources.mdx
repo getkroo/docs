@@ -1,16 +1,9 @@
 ---
 title: "Document Sources"
-description: "Index SharePoint folders as document sources so Kris can search them"
 icon: "folder-open"
 ---
 
-Document sources let you index cloud storage folders — such as shared SharePoint sites — so their contents become searchable in Kris. This guide walks through creating a document template from a SharePoint site and copying it into your own sources.
-
-## Prerequisites
-
-- **Kris enabled** for your Kroo account — contact [implementations@getkroo.com](mailto:implementations@getkroo.com) if you need this activated
-- **SharePoint access** — the site and document library you want to index must be connected to Kroo
-- **Admin permissions** in the Kroo App to create templates and manage document sources
+Document sources let you index cloud storage folders — such as shared SharePoint sites — so their contents become searchable in Kris. 
 
 ## Understanding templates and sources
 
@@ -40,13 +33,7 @@ You create a template to point at a SharePoint location, then **copy** that temp
 </Step>
 
 <Step title="Fill in the template details">
-  In the **New Document Template** dialog, provide the following:
-
-  - **Display Name** — a name for the template, e.g. `Kroo SharePoint Test`
-  - **Provider** — select **SharePoint**
-  - **SharePoint Site** — start typing the site name and select it from the results (e.g. **Kroo Enterprise Search Testing**)
-  - **Document Library** — choose a library from the site
-  - **Folder Path** — *(optional)* a subfolder relative to the drive root, e.g. `/Contracts/Active`. Leave blank to index the whole drive.
+  In the **New Document Template** dialog, provide each required field:
 
   <Frame>
     <img
