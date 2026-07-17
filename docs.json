@@ -84,6 +84,7 @@
             "pages": [
               "sso-setup",
               "kris-teams-bot",
+              "document-sources",
               "kroo-mcp-setup",
               "windows-desktop-app"
             ]
