@@ -14,15 +14,12 @@ The **Document sources** page has two sections:
 
 You create a template to point at a SharePoint location, then **copy** that template into your own sources to start indexing it.
 
-- A template is only a pointer to a SharePoint site and document library. On its own it isn't crawled — only a source is.
 - Only **Admin** users can create templates. Any user, admin or not, can copy an existing template into their own sources.
+- A template is only a pointer to a SharePoint site and document library. On its own it isn't crawled — only a source is.
 - Copying a template only affects your own sources; it doesn't add the folder for your teammates. Each person copies it individually.
 - Once copied, changes to the underlying SharePoint folder (files added, changed, or removed) reach you automatically on the next crawl — no action needed in Kroo.
 - **Remove copy** stops search for that one user only. The template itself stays available for everyone else to copy.
-
-<Info>
-You can only search folders you have permission to access in SharePoint. Copying a template you don't have access to won't return any results.
-</Info>
+- You can only access a copied source's contents if your Microsoft Entra ID account has access to that SharePoint site — Kroo doesn't grant access beyond your existing permissions.
 
 <Frame>
   <img
@@ -32,10 +29,6 @@ You can only search folders you have permission to access in SharePoint. Copying
 </Frame>
 
 ## Create a template
-
-<Info>
-Creating a template requires **Admin** permissions. If you're not an admin, ask one on your team to create the template — you'll still be able to copy it into your own sources.
-</Info>
 
 <Steps>
 <Step title="Open Document sources">
