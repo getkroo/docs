@@ -14,6 +14,13 @@ The **Document sources** page has two sections:
 
 You create a template to point at a SharePoint location, then **copy** that template into your own sources to start indexing it.
 
+- Only **Admin** users can create templates. Any user, admin or not, can copy an existing template into their own sources.
+- A template is only a pointer to a SharePoint site and document library. On its own it isn't crawled — only a source is.
+- Copying a template only affects your own sources; it doesn't add the folder for your teammates. Each person copies it individually.
+- Once copied, changes to the underlying SharePoint folder (files added, changed, or removed) reach you automatically on the next crawl — no action needed in Kroo.
+- **Remove copy** stops search for that one user only. The template itself stays available for everyone else to copy.
+- You can only access a copied source's contents if your Microsoft Entra ID account has access to that SharePoint site — Kroo doesn't grant access beyond your existing permissions.
+
 <Frame>
   <img
     src="/images/document-sources/document-sources-home.png"
@@ -45,6 +52,14 @@ You create a template to point at a SharePoint location, then **copy** that temp
   <Info>
   You must select a SharePoint site before the **Document Library** dropdown becomes available.
   </Info>
+
+  <Warning>
+  The **SharePoint site** field doesn't show a preloaded list — start typing the site name to trigger the dropdown, then select it. Pasting the full SharePoint URL won't work.
+  </Warning>
+
+  <Warning>
+  **Folder Path** is case-sensitive and must match the folder name exactly (for example, `/Contracts/Active`, not the full URL). Leave it blank to index the whole document library.
+  </Warning>
 </Step>
 
 <Step title="Create the template">
@@ -79,7 +94,7 @@ Creating a template only defines the shared folder — nothing is indexed until 
   </Frame>
 
   <Info>
-  A newly copied source shows `0` documents and **Never** for last crawled until the first crawl runs. This can take a few minutes.
+  A newly copied source shows `0` documents and **Never** for last crawled until the first crawl runs. This can take anywhere from a few minutes to a few hours.
   </Info>
 </Step>
 </Steps>
