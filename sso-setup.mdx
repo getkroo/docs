@@ -8,9 +8,13 @@ Single sign-on (SSO) lets your organization manage Kroo user authentication thro
 
 ## Prerequisites
 
-- **Kroo administrator access** to your company's SSO settings in the Kroo app
+- **Kroo Admin role** — you must have accepted your Kroo app invite, logged in at least once, and been granted the Admin role. Without this role, the SSO settings described below will not appear
 - **Identity provider administrator access** for Microsoft Entra ID or Okta
 - Permission to create or update an OAuth/OIDC application in your identity provider
+
+<Info>
+Don't see SSO settings after logging in? Confirm your account has the Admin role. Contact [implementations@getkroo.com](mailto:implementations@getkroo.com) if you need it granted.
+</Info>
 
 ## Setup
 
@@ -51,7 +55,7 @@ Choose your identity provider and enter the required values directly in the Kroo
       </Step>
 
       <Step title="Enter Microsoft Entra details in Kroo">
-        In the Kroo app, open your company's SSO settings and enter:
+        In the Kroo app, go to **Settings > Company > SSO** (visible only to users with the Admin role) and enter:
 
         - **Verified Domain**: The verified email domain users will use to sign in to Kroo, such as `yourcompany.com`
         - **Provider**: Select **Microsoft Entra ID OIDC**
@@ -91,7 +95,7 @@ Choose your identity provider and enter the required values directly in the Kroo
       </Step>
 
       <Step title="Enter Okta details in Kroo">
-        In the Kroo app, open your company's SSO settings and enter:
+        In the Kroo app, go to **Settings > Company > SSO** (visible only to users with the Admin role) and enter:
 
         - **Verified Domain**: The verified email domain users will use to sign in to Kroo, such as `yourcompany.com`
         - **Provider**: Select **Okta**
