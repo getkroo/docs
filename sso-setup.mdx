@@ -11,6 +11,7 @@ Single sign-on (SSO) lets your organization manage Kroo user authentication thro
 - **Kroo administrator access** to your company's SSO settings in the Kroo app
 - **Identity provider administrator access** for Microsoft Entra ID, Okta, or Duo Security
 - Permission to create or update an OAuth/OIDC application in your identity provider
+- **Required OIDC scopes for all SSO providers**: Configure your identity provider's application to allow `openid`, `email`, and `profile`
 
 ## Setup
 
@@ -26,6 +27,8 @@ Don't see SSO settings after logging in? Confirm your account has the **Admin** 
 
     <Steps>
       <Step title="Configure API permissions in Microsoft Entra">
+        Configure your Microsoft Entra app registration to allow the required OIDC scopes: `openid`, `email`, and `profile`.
+
         In your Microsoft Entra app registration, grant the required Microsoft Graph API permissions:
 
         - **User.Read**: Allows Kroo to read the signed-in user's basic profile
@@ -78,6 +81,8 @@ Don't see SSO settings after logging in? Confirm your account has the **Admin** 
         In Okta, create a new OIDC app integration for Kroo.
 
         Use **Web Application** as the application type.
+
+        Configure the app integration to allow the required OIDC scopes: `openid`, `email`, and `profile`.
       </Step>
 
       <Step title="Add the sign-in redirect URI">
@@ -127,7 +132,7 @@ Don't see SSO settings after logging in? Confirm your account has the **Admin** 
       </Step>
 
       <Step title="Configure scopes and user access">
-        On the **Scopes** tab, enable **openid**, **profile**, and **email**, and confirm the claims map to your users' names and email addresses.
+        On the **Scopes** tab, allow all three required OIDC scopes: `openid`, `email`, and `profile`. These scopes are required for all Kroo SSO providers. Confirm the claims map to your users' names and email addresses.
 
         Set **User access** to allow the users or groups that should be able to sign in to Kroo, then save the application.
       </Step>
