@@ -1,20 +1,25 @@
 ---
 title: "SSO Setup"
-description: "Configure single sign-on for Kroo with Microsoft Entra ID or Okta"
+description: "Configure single sign-on for Kroo with Microsoft Entra ID, Okta, or Duo Security"
 icon: "shield-keyhole"
 ---
 
-Single sign-on (SSO) lets your organization manage Kroo user authentication through Microsoft Entra ID or Okta.
+Single sign-on (SSO) lets your organization manage Kroo user authentication through Microsoft Entra ID, Okta, or Duo Security.
 
 ## Prerequisites
 
 - **Kroo administrator access** to your company's SSO settings in the Kroo app
-- **Identity provider administrator access** for Microsoft Entra ID or Okta
+- **Identity provider administrator access** for Microsoft Entra ID, Okta, or Duo Security
 - Permission to create or update an OAuth/OIDC application in your identity provider
+- **Required OIDC scopes for all SSO providers**: Configure your identity provider's application to allow `openid`, `email`, and `profile`
 
 ## Setup
 
-Choose your identity provider and enter the required values directly in the Kroo app.
+As a Kroo administrator, open [**Settings > Company**](https://app.getkroo.com/settings?tab=company) to configure SSO. Choose your identity provider and enter the required values using the steps below.
+
+<Info>
+Don't see SSO settings after logging in? Confirm your account has the **Admin** role. Contact [implementations@getkroo.com](mailto:implementations@getkroo.com) if you need help with access or run into any issues during setup.
+</Info>
 
 <Tabs>
   <Tab title="Microsoft Entra ID">
@@ -22,6 +27,8 @@ Choose your identity provider and enter the required values directly in the Kroo
 
     <Steps>
       <Step title="Configure API permissions in Microsoft Entra">
+        Configure your Microsoft Entra app registration to allow the required OIDC scopes: `openid`, `email`, and `profile`.
+
         In your Microsoft Entra app registration, grant the required Microsoft Graph API permissions:
 
         - **User.Read**: Allows Kroo to read the signed-in user's basic profile
@@ -74,6 +81,8 @@ Choose your identity provider and enter the required values directly in the Kroo
         In Okta, create a new OIDC app integration for Kroo.
 
         Use **Web Application** as the application type.
+
+        Configure the app integration to allow the required OIDC scopes: `openid`, `email`, and `profile`.
       </Step>
 
       <Step title="Add the sign-in redirect URI">
@@ -98,6 +107,56 @@ Choose your identity provider and enter the required values directly in the Kroo
         - **Issuer**: Your Okta issuer URL, such as `https://yourcompany.okta.com`
         - **Client ID**: Found in the Okta app integration
         - **Client Secret**: Generated for the Okta app integration
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="Duo Security">
+    Use these steps to configure Duo Single Sign-On as your OIDC provider.
+
+    <Steps>
+      <Step title="Create a Duo OIDC application">
+        Configure a working authentication source for Duo Single Sign-On, then add a **Generic OIDC Relying Party** application for Kroo in the Duo Admin Panel.
+
+        See [Duo's setup instructions](https://duo.com/docs/sso-oidc-generic) for authentication source and application configuration details.
+      </Step>
+
+      <Step title="Add the sign-in redirect URL">
+        On the application's **General** tab, configure the **Authorization Code** grant and add this **Sign-In Redirect URL**:
+
+        ```text
+        https://auth.getkroo.com/api/auth/sso/callback
+        ```
+
+        Duo sends users back to this URL after a successful login.
+      </Step>
+
+      <Step title="Configure scopes and user access">
+        On the **Scopes** tab, allow all three required OIDC scopes: `openid`, `email`, and `profile`. These scopes are required for all Kroo SSO providers. Confirm the claims map to your users' names and email addresses.
+
+        Set **User access** to allow the users or groups that should be able to sign in to Kroo, then save the application.
+      </Step>
+
+      <Step title="Enter Duo details in Kroo">
+        In the Kroo app, open your company's SSO settings and enter:
+
+        - **Verified domains**: The email domains users will use to sign in to Kroo, such as `yourcompany.com`. These are separate from your Duo SSO domain
+        - **Provider**: Select **Duo Security OIDC**
+        - **Duo SSO domain**: Your Duo hostname, such as `sso-12345678.sso.duosecurity.com`, with or without `https://`
+        - **Client ID**: Copy the full value from the Duo application's **Metadata** tab
+        - **Client secret**: Copy the value from the Duo application's **Metadata** tab
+
+        Kroo builds the issuer as `https://<duo-sso-domain>/oidc/<client-id>` and discovers the OIDC endpoints automatically. Click **Save SSO**.
+
+        <Info>
+        You can also paste the full **Issuer** URL from Duo's **Metadata** tab into **Duo SSO domain**. Kroo preserves its path instead of appending the Client ID. Use this option if your issuer's path identifier differs from your Client ID, such as with a multi-client Duo OAuth 2.1 / OIDC setup. Do not include `/.well-known/openid-configuration`.
+        </Info>
+      </Step>
+
+      <Step title="Update an existing Duo configuration">
+        Leave the client secret blank to keep the existing secret. You can keep the saved full issuer URL and masked Client ID unchanged.
+
+        If you replace the full issuer URL with a domain-only value, re-enter the full Client ID. Kroo cannot build an issuer from the masked value.
       </Step>
     </Steps>
   </Tab>
