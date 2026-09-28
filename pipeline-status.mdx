@@ -1,68 +1,279 @@
 ---
 title: "Pipeline Status Monitoring"
-description: "Monitor data pipeline sync times using the Pipeline Status API and integrate with PowerBI for real-time dashboards."
+description: "Monitor sync freshness, health, and utilization with the v3 Sync Status API and integrate with PowerBI for real-time dashboards."
 icon: "signal"
 ---
 
 ## Overview
 
-The Pipeline Status API helps you monitor the health and freshness of your Kroo data pipelines. Use it to:
+The **v3 Sync Status API** lets you monitor the health and freshness of every Kroo sync from your own tools. Use it to:
 
-- **Track data freshness** - See when each pipeline last synced data
-- **Determine data availability** - View scheduled next sync times for planning
-- **Identify sync issues** - Spot pipelines that haven't updated recently
-- **Create dashboards** - Build PowerBI reports for real-time monitoring
-- **Set up alerts** - Get notified when data becomes stale
+- **Track data freshness** - See when each endpoint last landed fresh data
+- **Plan around availability** - View each endpoint's next scheduled sync
+- **Diagnose sync issues** - Inspect last-run status, duration, and cadence
+- **Monitor utilization** - Track partner API-call volume over the last 24 hours
+- **Build dashboards & alerts** - Feed PowerBI reports and staleness alerts
 
 <Info>
 This is particularly useful for data engineers and project managers who need to ensure critical construction data is up-to-date for reporting and decision-making.
 </Info>
 
+<Info>
+The full request and response schema for every endpoint below lives in the **API Reference** tab. This page is the task-oriented guide. The legacy [v1 Pipeline Status API](#legacy-pipeline-status-api-v1) (Basic Auth) is still supported for existing integrations.
+</Info>
+
 ## Quick Start
 
-### Get Your API Credentials
+The v3 API uses OAuth 2.0 **client credentials**: exchange your credentials for a short-lived Bearer token, then send that token on each request.
 
 <Steps>
-<Step title="Log into Kroo">
-Access your Kroo application with your regular login
+<Step title="Get API client credentials">
+Contact [implementations@getkroo.com](mailto:implementations@getkroo.com) to register an API client. You'll receive a `client_id` and `client_secret`. Treat the secret like a password.
 </Step>
 
-<Step title="Navigate to Company Settings">
-Go to **Settings > Company** in the Kroo App
-</Step>
-
-<Step title="Copy API Credentials">
-Find your Basic Auth credentials (username and password) and copy them for use in API calls
-</Step>
-</Steps>
-
-### Test Your Connection
-
-Try this quick test to see your available data partners:
+<Step title="Request an access token">
+Exchange your credentials at the token endpoint. Request the `read:sync_status` scope.
 
 <Tabs>
-<Tab title="Windows (PowerShell)">
-```powershell
-Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status/describe' `
--Method GET `
--Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
-```
-</Tab>
-<Tab title="Windows (Command Prompt)">
-```cmd
-curl --location "https://api.getkroo.com/api/v1/pipeline_status/describe" ^
---header "Authorization: Basic [YOUR_CREDENTIALS]"
-```
-</Tab>
 <Tab title="Mac/Linux">
 ```bash
-curl --location 'https://api.getkroo.com/api/v1/pipeline_status/describe' \
---header 'Authorization: Basic [YOUR_CREDENTIALS]'
+curl --location 'https://api.getkroo.com/api/v3/oauth/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=client_credentials' \
+--data-urlencode 'client_id=YOUR_CLIENT_ID' \
+--data-urlencode 'client_secret=YOUR_CLIENT_SECRET' \
+--data-urlencode 'scope=read:sync_status'
+```
+</Tab>
+<Tab title="Windows (PowerShell)">
+```powershell
+Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v3/oauth/token' `
+-Method POST `
+-ContentType 'application/x-www-form-urlencoded' `
+-Body @{
+  grant_type    = 'client_credentials'
+  client_id     = 'YOUR_CLIENT_ID'
+  client_secret = 'YOUR_CLIENT_SECRET'
+  scope         = 'read:sync_status'
+}
 ```
 </Tab>
 </Tabs>
 
-**Expected Response:**
+**Response:**
+```json
+{
+    "access_token": "f4a91d2bce7c4f0a9b8e3d6c5a2f1e8b9d7c6a5b4e3f2d1c0b9a8e7d6c5b4a3f",
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "scope": "read:sync_status"
+}
+```
+</Step>
+
+<Step title="Call the API with your token">
+Send the token in the `Authorization` header as a Bearer credential.
+
+```bash
+curl --location 'https://api.getkroo.com/api/v3/sync_status?partner=procore' \
+--header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
+```
+</Step>
+</Steps>
+
+<Info>
+Tokens expire after **1 hour** (`expires_in: 3600`). Request a new one with the same credentials when it expires. The `read:sync_status` scope is required for this endpoint.
+</Info>
+
+## Sync Status API (v3)
+
+### List Sync Status
+**Endpoint:** `GET /api/v3/sync_status`
+
+Returns per-endpoint sync status for your company — one row per sync config, ordered by partner name then endpoint key. Results are paginated and cached for roughly 60 seconds. See the **API Reference** tab for the complete schema.
+
+**Query Parameters:**
+- `partner` (optional) - Integration name to filter to a single partner (e.g. `procore`). Max 100 characters
+- `page` (optional) - 1-indexed page number, clamped to `[1, 10000]`. Defaults to `1`
+- `per_page` (optional) - Page size, clamped to `[1, 100]`. Defaults to `50`
+
+<Tabs>
+<Tab title="Mac/Linux">
+```bash
+# All partners
+curl --location 'https://api.getkroo.com/api/v3/sync_status' \
+--header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
+
+# Filtered to one partner, second page
+curl --location 'https://api.getkroo.com/api/v3/sync_status?partner=procore&page=2&per_page=50' \
+--header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
+```
+</Tab>
+<Tab title="Windows (PowerShell)">
+```powershell
+Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v3/sync_status?partner=procore' `
+-Method GET `
+-Headers @{'Authorization' = 'Bearer YOUR_ACCESS_TOKEN'}
+```
+</Tab>
+</Tabs>
+
+**Sample Response:**
+```json
+{
+    "data": [
+        {
+            "id": "12345",
+            "type": "sync_status",
+            "attributes": {
+                "endpoint_key": "procore_projects",
+                "partner_name": "procore",
+                "status": "active",
+                "last_updated_at": "2025-09-08T07:02:21.876-07:00",
+                "next_sync_at": "2025-09-08T13:02:21.876-07:00",
+                "last_sync_status": "completed",
+                "last_sync_started_at": "2025-09-08T07:00:10.000-07:00",
+                "last_sync_finished_at": "2025-09-08T07:02:21.876-07:00",
+                "last_sync_duration_seconds": 131,
+                "frequency_minutes": 360,
+                "api_calls_last_24h": 48
+            }
+        }
+    ],
+    "meta": {
+        "page": 1,
+        "per_page": 50,
+        "total_count": 87,
+        "total_pages": 2
+    }
+}
+```
+
+**Response Attributes:**
+| Attribute | Description |
+| --- | --- |
+| `endpoint_key` | Sync config key (e.g. `procore_projects`) |
+| `partner_name` | Integration name (e.g. `procore`) |
+| `status` | Config status: `active`, `inactive`, or `webhook` |
+| `last_updated_at` | **Data freshness** — last completed sync landing time, reconciled across Kroo-native and Fivetran webhook syncs. `null` when nothing has landed since the config's last recorded sync |
+| `next_sync_at` | Next scheduled sync time. `null` for inactive configs |
+| `last_sync_status` | Last run outcome: `completed`, `failed`, `in_progress`, `timed_out`, or `rate_limited` |
+| `last_sync_started_at` | When the last run started |
+| `last_sync_finished_at` | When the last run finished |
+| `last_sync_duration_seconds` | Duration of the last run in seconds |
+| `frequency_minutes` | Expected sync cadence in minutes |
+| `api_calls_last_24h` | **Utilization** — count of API calls made to the partner in the last 24 hours (distinct from data freshness) |
+
+<Info>
+**Pagination:** Use `meta.total_pages` to page through all endpoints. A large integration may span several pages — increase `per_page` (up to 100) or loop from `page=1` to `meta.total_pages`.
+</Info>
+
+<Info>
+**Rate limiting:** v3 endpoints allow 60 requests per minute per IP (the token endpoint allows 10 per minute). Every response includes `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset` headers. When the limit is exceeded the API returns `429`; back off until the `X-RateLimit-Reset` Unix timestamp before retrying.
+</Info>
+
+## PowerBI Dashboard Setup
+
+Build a real-time sync monitoring dashboard in PowerBI on top of the v3 API. Because v3 uses OAuth, fetch a token and call the endpoint from a single Power Query (M) script rather than the basic **Web** connector.
+
+<Steps>
+<Step title="Create a blank query">
+In **PowerBI Desktop**, click **Get Data** > **Blank Query**, then open the **Advanced Editor**.
+</Step>
+
+<Step title="Fetch a token and call the API">
+Paste the following, substituting your `client_id`, `client_secret`, and desired `partner`:
+
+```m
+let
+    TokenResponse = Json.Document(Web.Contents(
+        "https://api.getkroo.com/api/v3/oauth/token",
+        [
+            Headers = [#"Content-Type" = "application/x-www-form-urlencoded"],
+            Content = Text.ToBinary("grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&scope=read:sync_status")
+        ]
+    )),
+    AccessToken = TokenResponse[access_token],
+    Response = Json.Document(Web.Contents(
+        "https://api.getkroo.com/api/v3/sync_status?partner=procore&per_page=100",
+        [ Headers = [ Authorization = "Bearer " & AccessToken ] ]
+    )),
+    Data = Response[data],
+    ToTable = Table.FromList(Data, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    Expanded = Table.ExpandRecordColumn(ToTable, "Column1", {"attributes"}, {"attributes"}),
+    Attributes = Table.ExpandRecordColumn(Expanded, "attributes",
+        {"endpoint_key", "partner_name", "status", "last_updated_at", "next_sync_at",
+         "last_sync_status", "last_sync_duration_seconds", "frequency_minutes", "api_calls_last_24h"})
+in
+    Attributes
+```
+</Step>
+
+<Step title="Set data types and build visuals">
+1. **Set Data Types** - Date/Time for `last_updated_at` and `next_sync_at`, whole number for the numeric columns
+2. Click **Close & Apply**, then build:
+   - **Status Table** - All endpoints with freshness and last-run status
+   - **Freshness Cards** - Oldest / newest `last_updated_at`
+   - **Alert Visuals** - Highlight endpoints where `last_sync_status` is `failed` or data is stale
+   - **Utilization Charts** - `api_calls_last_24h` by partner
+</Step>
+
+<Step title="Enable auto-refresh">
+1. Publish to **PowerBI Service**
+2. Go to **Settings > Scheduled refresh** and set the frequency (hourly recommended)
+3. Configure failure notifications
+</Step>
+</Steps>
+
+<Warning>
+Access tokens expire after 1 hour. The query above requests a fresh token on every refresh, so scheduled refreshes keep working. For larger integrations, extend the script to loop through `meta.total_pages`.
+</Warning>
+
+## Common Use Cases
+
+### Monitoring Critical Endpoints
+Set up alerts for business-critical data using `last_updated_at`:
+
+```
+Daily endpoints    → Alert if >25 hours stale
+Hourly endpoints   → Alert if >2 hours stale
+Frequent endpoints → Alert if >30 minutes stale
+```
+
+### Operations Dashboard
+Create executive dashboards showing:
+- Overall data health status (`last_sync_status` across endpoints)
+- Sync performance trends (`last_sync_duration_seconds`)
+- Integration partner reliability
+- Partner API utilization (`api_calls_last_24h`)
+
+### Troubleshooting Data Issues
+When reports show unexpected data:
+1. Check `last_updated_at` and `last_sync_status` to identify sync delays or failures
+2. Compare freshness across related endpoints
+3. Coordinate with Kroo support using specific `endpoint_key` values and timestamps
+
+<Info>
+**Pro Tip:** Bookmark your PowerBI dashboard and check it before running important reports to ensure you're working with fresh data.
+</Info>
+
+## Legacy: Pipeline Status API (v1)
+
+<Info>
+The v1 API remains available for existing integrations, but new integrations should use the [v3 Sync Status API](#sync-status-api-v3) above. v1 uses Basic Authentication and returns flat maps of pipeline name to timestamp. Find your Basic Auth credentials in the Kroo App under **Settings > Company**.
+</Info>
+
+### Get Available Partners
+**Endpoint:** `GET /api/v1/pipeline_status/describe`
+
+Discover which data integration partners are configured in your Kroo instance.
+
+```bash
+curl --location 'https://api.getkroo.com/api/v1/pipeline_status/describe' \
+--header 'Authorization: Basic [YOUR_CREDENTIALS]'
+```
+
+**Response:**
 ```json
 {
     "partners": [
@@ -72,13 +283,6 @@ curl --location 'https://api.getkroo.com/api/v1/pipeline_status/describe' \
 }
 ```
 
-## API Reference
-
-### Get Available Partners
-**Endpoint:** `GET /api/v1/pipeline_status/describe`
-
-Discover which data integration partners are configured in your Kroo instance.
-
 ### Get Pipeline Status
 **Endpoint:** `GET /api/v1/pipeline_status?partner={partner_name}&filters[]={pipeline_key}`
 
@@ -86,193 +290,43 @@ Retrieve the last sync timestamp for all pipelines from a specific partner.
 
 **Query Parameters:**
 - `partner` (required) - The name of the integration partner (e.g., "procore", "cmic")
-- `filters[]` (optional) - Pipeline keys to include in the response. When specified, only these pipelines will be returned. Can be specified multiple times to include multiple pipelines. If omitted, all pipelines are returned
+- `filters[]` (optional) - Pipeline keys to include in the response. Repeat the parameter to include multiple pipelines. If omitted, all pipelines are returned
 
-<Info>
-**Multiple Filters Syntax:** To include multiple pipelines, repeat the `filters[]` parameter:
-```
-?partner=procore&filters[]=procore_vendors&filters[]=procore_offices&filters[]=procore_submittals
-```
-The `[]` brackets indicate an array parameter. Each repetition adds another pipeline to include.
-</Info>
-
-<Tabs>
-<Tab title="Basic Request">
 ```bash
+# All pipelines
 curl --location 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore' \
 --header 'Authorization: Basic [YOUR_CREDENTIALS]'
-```
-</Tab>
-<Tab title="With Filters">
-```bash
-# Include only specific pipelines in the response
+
+# Filtered to specific pipelines
 curl --location 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore&filters[]=procore_vendors&filters[]=procore_offices' \
 --header 'Authorization: Basic [YOUR_CREDENTIALS]'
 ```
-</Tab>
-<Tab title="Windows (PowerShell)">
-```powershell
-# Basic request
-Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore' `
--Method GET `
--Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
-
-# With filters
-Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status?partner=procore&filters[]=procore_vendors&filters[]=procore_offices' `
--Method GET `
--Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
-```
-</Tab>
-</Tabs>
 
 **Sample Response:**
 ```json
 {
     "procore_commitment_change_orders": "2025-09-07T23:02:36.395-07:00",
     "procore_vendors": "2025-09-08T07:02:21.876-07:00",
-    "procore_direct_costs": "2025-09-07T21:03:10.634-07:00",
     "procore_rfis": "2025-09-07T21:03:10.634-07:00",
-    "procore_submittals": "2025-09-07T20:02:38.802-07:00",
-    "procore_change_order_requests": "2025-09-07T19:02:31.892-07:00",
-    "procore_wbs_codes": null,
-    "procore_cost_codes": null
+    "procore_wbs_codes": null
 }
 ```
-
-<Info>
-**Understanding the Response:**
-- Timestamps show the last successful sync in ISO 8601 format
-- `null` values indicate pipelines that haven't synced yet or are disabled
-- All times include timezone information for accurate tracking
-</Info>
 
 ### Get Next Sync Times
 **Endpoint:** `GET /api/v1/pipeline_status/next_sync_times?partner={partner_name}&filters[]={pipeline_key}`
 
-Retrieve the scheduled next sync time for all pipelines from a specific partner. This helps you anticipate when fresh data will be available.
+Retrieve the scheduled next sync time for all pipelines from a specific partner. Accepts the same `partner` and `filters[]` parameters as above.
 
-**Query Parameters:**
-- `partner` (required) - The name of the integration partner (e.g., "procore", "cmic")
-- `filters[]` (optional) - Pipeline keys to include in the response. When specified, only these pipelines will be returned. Can be specified multiple times to include multiple pipelines. If omitted, all pipelines are returned
-
-<Info>
-**Multiple Filters Syntax:** To include multiple pipelines, repeat the `filters[]` parameter:
-```
-?partner=procore&filters[]=procore_submittals&filters[]=procore_departments&filters[]=procore_offices
-```
-The `[]` brackets indicate an array parameter. Each repetition adds another pipeline to include.
-</Info>
-
-<Tabs>
-<Tab title="Basic Request">
 ```bash
 curl --location 'https://api.getkroo.com/api/v1/pipeline_status/next_sync_times?partner=procore' \
 --header 'Authorization: Basic [YOUR_CREDENTIALS]'
 ```
-</Tab>
-<Tab title="With Filters">
-```bash
-# Include only specific pipelines in the response
-curl --location 'https://api.getkroo.com/api/v1/pipeline_status/next_sync_times?partner=procore&filters[]=procore_submittals&filters[]=procore_departments' \
---header 'Authorization: Basic [YOUR_CREDENTIALS]'
-```
-</Tab>
-<Tab title="Windows (PowerShell)">
-```powershell
-# Basic request
-Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status/next_sync_times?partner=procore' `
--Method GET `
--Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
-
-# With filters
-Invoke-RestMethod -Uri 'https://api.getkroo.com/api/v1/pipeline_status/next_sync_times?partner=procore&filters[]=procore_submittals&filters[]=procore_departments' `
--Method GET `
--Headers @{'Authorization' = 'Basic [YOUR_CREDENTIALS]'}
-```
-</Tab>
-</Tabs>
 
 **Sample Response:**
 ```json
 {
     "procore_coordination_issues": "2025-12-09T17:00:00.000-08:00",
-    "procore_action_plans": "2025-12-09T02:00:00.000-08:00",
-    "procore_schedule_tasks": "2025-12-09T03:00:00.000-08:00",
     "procore_submittals": "2025-12-09T18:00:00.000-08:00",
-    "procore_departments": "2025-12-09T15:00:00.000-08:00",
     "procore_offices": "2025-12-09T18:00:00.000-08:00"
 }
 ```
-
-<Info>
-**Understanding the Response:**
-- Timestamps show the scheduled next sync time in ISO 8601 format
-- Use this to plan around data availability for time-sensitive reports
-- Combine with last sync times to understand the full sync schedule
-</Info>
-
-## PowerBI Dashboard Setup
-
-Create a real-time pipeline monitoring dashboard in PowerBI:
-
-<Steps>
-<Step title="Connect to the API">
-1. Open **PowerBI Desktop** and create a new report
-2. Click **Get Data** > **Web**  
-3. Enter URL: `https://api.getkroo.com/api/v1/pipeline_status?partner=procore`
-4. Select **Basic** authentication and enter your Kroo credentials
-</Step>
-
-<Step title="Transform the Data">
-In Power Query Editor:
-1. **Convert to Table** - Click **Convert > To Table**
-2. **Expand Columns** - Select **Name** and **Value** columns
-3. **Rename Columns** - Change to "Pipeline" and "Last Sync Time"
-4. **Set Data Types** - Text for Pipeline, Date/Time for Last Sync Time
-5. **Remove Nulls** - Filter out rows with null sync times
-6. Click **Close & Apply**
-</Step>
-
-<Step title="Build Visualizations">
-Create useful charts and tables:
-- **Status Table** - All pipelines with sync times
-- **Freshness Cards** - Show oldest/newest sync times  
-- **Alert Visuals** - Highlight stale data (>24 hours old)
-- **Timeline Charts** - Track sync patterns over time
-</Step>
-
-<Step title="Enable Auto-Refresh">
-1. Publish to PowerBI Service
-2. Go to **Settings > Scheduled refresh**
-3. Set refresh frequency (hourly recommended)
-4. Configure failure notifications
-</Step>
-</Steps>
-
-## Common Use Cases
-
-### Monitoring Critical Pipelines
-Set up alerts for business-critical data:
-
-```
-Daily Pipelines → Alert if >25 hours stale
-Hourly Pipelines → Alert if >2 hours stale  
-Real-time Pipelines → Alert if >30 minutes stale
-```
-
-### Operations Dashboard
-Create executive dashboards showing:
-- Overall data health status
-- Pipeline performance trends
-- Integration partner reliability
-- Data availability for key reports
-
-### Troubleshooting Data Issues
-When reports show unexpected data:
-1. Check pipeline status to identify sync delays
-2. Compare sync times across related pipelines
-3. Coordinate with Kroo support using specific pipeline names and timestamps
-
-<Info>
-**Pro Tip:** Bookmark your PowerBI dashboard and check it before running important reports to ensure you're working with fresh data.
-</Info>

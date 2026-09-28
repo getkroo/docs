@@ -100,7 +100,30 @@
       },
       {
         "tab": "API Reference",
-        "openapi": "https://api.getkroo.com/api/v3/openapi.yaml"
+        "openapi": "https://api.getkroo.com/api/v3/openapi.yaml",
+        "groups": [
+          {
+            "group": "Authentication",
+            "pages": [
+              "POST /oauth/token"
+            ]
+          },
+          {
+            "group": "Sync Status",
+            "pages": [
+              "api-reference/list-sync-status"
+            ]
+          },
+          {
+            "group": "Schedule Files",
+            "pages": [
+              "GET /schedule_files",
+              "POST /schedule_files",
+              "GET /schedule_files/{id}",
+              "DELETE /schedule_files/{id}"
+            ]
+          }
+        ]
       }
     ],
     "global": {
