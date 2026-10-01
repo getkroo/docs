@@ -64,7 +64,8 @@
             "pages": [
               "permissions/overview",
               "permissions/access-control",
-              "permissions/row-level-permissions"
+              "permissions/row-level-permissions",
+              "permissions/lakehouse-sql-access"
             ]
           },
           {

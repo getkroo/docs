@@ -1,0 +1,251 @@
+---
+title: "Lakehouse SQL Access"
+description: "Grant users full or permission-scoped access to a Kroo lakehouse SQL analytics endpoint with Microsoft Entra ID and Microsoft Fabric"
+icon: "user-lock"
+---
+
+This guide walks through granting your users access to a Kroo lakehouse SQL analytics endpoint, set up in Microsoft Entra ID and Microsoft Fabric with either full or permission-scoped access.
+
+<Info>
+**Audience:** IT and Microsoft 365 administrators. **Guide version:** October 2026.
+</Info>
+
+## Overview
+
+There are two ways to let your users query a Kroo lakehouse through its SQL analytics endpoint. Both start the same way: you add users to a Microsoft Entra ID security group and share the lakehouse with that group. One checkbox, **Read all with SQL analytics endpoint**, decides which method you are using.
+
+<CardGroup cols={2}>
+  <Card title="Method A: Microsoft Entra ID" icon="square-check">
+    **Checkbox checked.** Microsoft checks whether the user's email has access to the lakehouse. Access is all or nothing: every table and view is readable.
+  </Card>
+  <Card title="Method B: Kroo Row-Level Permissions" icon="square">
+    **Checkbox unchecked.** The user can connect, but [Kroo Row-Level Permissions](/permissions/row-level-permissions) decide what they see, so each user can be limited to a subset of the data.
+  </Card>
+</CardGroup>
+
+<Frame caption="Figure 1. The same group and share are used either way; only the checkbox changes what users can see.">
+  <img src="/images/lakehouse-sql-access/access-method-decision.png" alt="Flowchart: customer users in an Entra ID security group reach the lakehouse once it is shared with the group. If Read all with SQL analytics endpoint is checked, Microsoft Entra ID checks the user has lakehouse access and every table and view is readable. If unchecked, Kroo Row-Level Permissions check access and each user sees only their subset." />
+</Frame>
+
+## Choosing a method
+
+Use **Method A** when everyone in the group should see all data. Use **Method B** when any user needs to be limited to certain companies, jobs, departments or tables.
+
+| | Method A: Microsoft Entra ID | Method B: Kroo Row-Level Permissions |
+|---|---|---|
+| **Read all with SQL analytics endpoint** | Checked | Unchecked |
+| **What is checked** | The user's email has access to the lakehouse | The user's email has access, then their Kroo permissions |
+| **Data visible** | All tables and views | Only the rows and tables granted in Kroo |
+| **Where access is managed** | Entra ID group membership | Entra ID group membership plus the Kroo app |
+| **Best for** | Finance, BI and IT users who need everything | Project managers, field staff, anyone with restricted scope |
+
+## Setup at a glance
+
+Four roles are involved. Each column shows who does which step, read top to bottom.
+
+<Frame caption="Figure 2. The checkbox in Step 3 is the only fork: Method A goes straight to the user, while Method B adds the Kroo permissions step.">
+  <img src="/images/lakehouse-sql-access/setup-at-a-glance.png" alt="Swimlane diagram with four roles: Entra ID admin, Fabric admin, Kroo admin and customer user. The Entra ID admin creates the security group and adds users (Step 2). The Fabric admin shares the lakehouse and sets the checkbox (Step 3). If checked (Method A), users query data through the SQL analytics endpoint directly. If unchecked (Method B), the Kroo admin first sets data permissions in the Kroo app (Step 3B)." />
+</Frame>
+
+## Step 1: Confirm roles
+
+Before you start, make sure the right people are involved. All users must already have an account in your Microsoft Entra ID tenant.
+
+| Task | Who can do it | Where |
+|---|---|---|
+| Create a security group and add members | **Groups Administrator** or **User Administrator** | Microsoft Entra admin center |
+| Share the lakehouse | Workspace **Admin** or **Member** | Microsoft Fabric |
+
+## Step 2: Create the security group and add users
+
+Create one group per access level, for example `Kroo-Lakehouse-FullAccess` (Method A) and `Kroo-Lakehouse-Scoped` (Method B).
+
+<Steps>
+<Step title="Sign in to the Microsoft Entra admin center">
+  Sign in to the [Microsoft Entra admin center](https://entra.microsoft.com/) as at least a **Groups Administrator**.
+</Step>
+
+<Step title="Start a new group">
+  Go to **Entra ID** > **Groups** > **All groups**, then select **New group**.
+</Step>
+
+<Step title="Set the group type">
+  Set **Group type** to **Security**.
+</Step>
+
+<Step title="Name the group">
+  Enter a **Group name** and an optional **Group description**, such as "Read access to the Kroo lakehouse SQL analytics endpoint."
+</Step>
+
+<Step title="Set the membership type">
+  Set **Membership type** to **Assigned**.
+</Step>
+
+<Step title="Add members">
+  Under **Members**, select **No members selected**, search for each user, check them, and choose **Select**.
+</Step>
+
+<Step title="Create the group">
+  Select **Create**.
+</Step>
+</Steps>
+
+<Info>
+**To add users to an existing group:** open the group, select **Members** > **+ Add members**, choose the users, then **Select**.
+</Info>
+
+**Microsoft Learn:** [Manage Microsoft Entra groups and group membership](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-manage-groups)
+
+## Step 3: Share the lakehouse
+
+Pick the tab that matches your method. If you created a group for each access level, complete both tabs, one per group.
+
+<Tabs>
+  <Tab title="3A: Full access (Method A)">
+    This gives every group member read access to all tables and views.
+
+    <Steps>
+    <Step title="Open the workspace">
+      Sign in to [Microsoft Fabric](https://app.fabric.microsoft.com/) and open the workspace that holds the Kroo lakehouse.
+    </Step>
+
+    <Step title="Find the lakehouse">
+      Find the lakehouse in the item list (type **Lakehouse**, not the SQL analytics endpoint).
+    </Step>
+
+    <Step title="Open the share dialog">
+      Select **...** (More options) next to its name, then **Share**.
+    </Step>
+
+    <Step title="Add the security group">
+      In **Grant people access**, type the security group name and select it from the list.
+    </Step>
+
+    <Step title="Set the additional permissions">
+      Set the additional permissions as shown below.
+
+      | Permission | Setting | Why |
+      |---|---|---|
+      | Read (default) | Always granted | Lets users open and connect to the lakehouse |
+      | **Read all with SQL analytics endpoint** | **Checked** | Lets users query all tables and views with SQL |
+      | Read all with Apache Spark | Unchecked | Only for data engineers using notebooks |
+    </Step>
+
+    <Step title="Notify recipients (optional)">
+      Optional: check **Notify recipients by email** and add a message.
+    </Step>
+
+    <Step title="Grant access">
+      Select **Grant**.
+    </Step>
+    </Steps>
+
+    **Microsoft Learn:** [How to share your lakehouse and manage permissions](https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sharing)
+  </Tab>
+
+  <Tab title="3B: Scoped access (Method B)">
+    This lets group members connect, but they see no data until Kroo grants it.
+
+    <Steps>
+    <Step title="Open the workspace">
+      Sign in to [Microsoft Fabric](https://app.fabric.microsoft.com/) and open the workspace that holds the Kroo lakehouse.
+    </Step>
+
+    <Step title="Open the share dialog">
+      Select **...** (More options) next to the lakehouse name, then **Share**.
+    </Step>
+
+    <Step title="Add the security group">
+      In **Grant people access**, type the security group name and select it.
+    </Step>
+
+    <Step title="Leave the additional permissions unchecked">
+      Leave **Read all with SQL analytics endpoint** and **Read all with Apache Spark** unchecked. Members receive **Read** only.
+    </Step>
+
+    <Step title="Notify recipients (optional)">
+      Optional: check **Notify recipients by email** and add a message.
+    </Step>
+
+    <Step title="Grant access">
+      Select **Grant**.
+    </Step>
+
+    <Step title="Add each user in Kroo">
+      In the Kroo app, add each user with the exact email they use to sign in to Microsoft.
+    </Step>
+
+    <Step title="Assign data permissions in Kroo">
+      Assign each user's data permissions in Kroo, such as the companies, jobs or tables they may see, and save. See [Row-Level Permissions](/permissions/row-level-permissions) for how to set up groups and row filters.
+    </Step>
+    </Steps>
+
+    <Warning>
+    **Important:** do not also give these users a workspace role (**Admin**, **Member**, **Contributor** or **Viewer**) in **Manage access** for the workspace. Admin, Member and Contributor can read all lakehouse data, which bypasses Kroo permissions. Share the lakehouse item only.
+    </Warning>
+
+    **Microsoft Learn:** [Share your data and manage permissions](https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions) · [Workspace roles in Lakehouse](https://learn.microsoft.com/en-us/fabric/data-engineering/workspace-roles-lakehouse)
+  </Tab>
+</Tabs>
+
+## Managing access over time
+
+Day-to-day changes happen in the security group, not in Fabric, so the lakehouse share rarely needs to change.
+
+| Change | Method A | Method B |
+|---|---|---|
+| **Add a user** | Add them to the group ([Step 2](#step-2-create-the-security-group-and-add-users)) | Add them to the group, then assign permissions in Kroo |
+| **Remove a user** | Remove them from the group | Remove them from the group and from Kroo |
+| **Change what a user sees** | Move them to the Method B group | Update their permissions in Kroo |
+| **Review who has access** | Entra ID: group > **Members** | Entra ID group members, plus permissions in Kroo |
+
+To review or remove the lakehouse share itself, select **...** next to the lakehouse > **Manage permissions** > **Direct access**.
+
+<Info>
+**Timing:** Microsoft notes permission changes can take up to 2 hours for signed-in users, or apply at next sign-in. Ask users to sign out and back in if a change does not show.
+</Info>
+
+**Microsoft Learn:** [Share items in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/fundamentals/share-items)
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="User cannot connect at all" icon="plug-circle-xmark">
+    **Likely cause:** Not in the security group, or the lakehouse was not shared with the group.
+
+    **Fix:** Check group membership in Entra ID and **Manage permissions** on the lakehouse.
+  </Accordion>
+
+  <Accordion title="Method B user sees all data" icon="eye">
+    **Likely cause:** The checkbox was checked, or the user has a workspace role.
+
+    **Fix:** Uncheck **Read all with SQL analytics endpoint**; remove the workspace role.
+  </Accordion>
+
+  <Accordion title="Method B user sees no data" icon="eye-slash">
+    **Likely cause:** No permissions assigned in Kroo, or an email mismatch.
+
+    **Fix:** Assign permissions in Kroo using the exact Entra ID sign-in email.
+  </Accordion>
+
+  <Accordion title="Access change not showing" icon="clock">
+    **Likely cause:** Group membership is still syncing.
+
+    **Fix:** Allow up to 2 hours, or sign out and back in.
+  </Accordion>
+</AccordionGroup>
+
+## References
+
+<CardGroup cols={2}>
+  <Card title="How to share your lakehouse and manage permissions" icon="book-open" href="https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sharing" />
+  <Card title="Share your data and manage permissions (warehouse and SQL analytics endpoint)" icon="book-open" href="https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions" />
+  <Card title="Workspace roles in Lakehouse" icon="book-open" href="https://learn.microsoft.com/en-us/fabric/data-engineering/workspace-roles-lakehouse" />
+  <Card title="Row-level security in Fabric data warehousing" icon="book-open" href="https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security" />
+  <Card title="Manage Microsoft Entra groups and group membership" icon="book-open" href="https://learn.microsoft.com/en-us/entra/fundamentals/how-to-manage-groups" />
+  <Card title="Share items in Microsoft Fabric" icon="book-open" href="https://learn.microsoft.com/en-us/fabric/fundamentals/share-items" />
+</CardGroup>
+
+## Support
+
+If you run into issues setting up lakehouse access, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
