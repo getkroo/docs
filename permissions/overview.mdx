@@ -1,23 +1,46 @@
 ---
 title: "Permissions Overview"
-description: "Control who can access what data in Kroo"
+description: "Control who can use which Kroo features and see which data"
 icon: "shield-halved"
 ---
 
-Kroo provides two layers of permissions to help you control data access across your organization. Use them together or independently depending on your security requirements.
+<Info>
+This permissions model takes effect on **October 18, 2026**.
+</Info>
 
-<CardGroup cols={2}>
-  <Card title="Access Control" icon="key" href="/permissions/access-control">
-    Control which data warehouses a user can query and which integrations they can see.
+Kroo permissions give you granular control over which features each user can use and which data they can see — across Kroo Studio dashboards, the Data Viewer, the Data Dictionary, Kris, and MCPs.
+
+Permissions are managed in three layers. A user's effective access is the **union** of everything granted through all three.
+
+<CardGroup cols={3}>
+  <Card title="Roles" icon="user-shield" href="/permissions/roles">
+    Managed centrally in Settings. Grant access to Kroo features and to configuring Connections.
+  </Card>
+  <Card title="Resources" icon="folder-tree" href="/permissions/resources">
+    Managed within each tool. Grant access to specific dashboards, projects, and databases.
   </Card>
   <Card title="Row-Level Permissions" icon="filter" href="/permissions/row-level-permissions">
-    Filter what data Kris can access per user group — like limiting visibility to only their projects or hiding sensitive tables entirely.
+    Control which tables and rows each user can see within a database.
   </Card>
 </CardGroup>
 
-<Info>
-**Admin users** bypass all permission restrictions and have full, unrestricted access to every destination, integration, and table in Kroo.
-</Info>
+## How the layers fit together
+
+- **Roles** decide which parts of Kroo a user can open and administer, and which data connectors they can configure.
+- **Resources** decide which specific items — a Studio dashboard, an embedded Power BI dashboard, a project, a database — a user can view, edit, or manage access to.
+- **Row-Level Permissions (RLP)** decide which tables and rows a user can see once they're inside a database. RLP applies everywhere Kroo data is shown, not only in Kris.
+
+<Warning>
+Granting a role access to a **Connection** or to **Data Warehouses** settings does not give a user access to the underlying data. Data access requires **Database Access** at the resource level **and** membership in a Row-Level Permissions group.
+</Warning>
+
+## Owners
+
+The **Owner** is the top of the role hierarchy and has access to everything in Kroo. Owners can only be designated by the Kroo team at your company's direction. See [Structuring roles](/permissions/roles#structuring-roles).
+
+## MCP and external AI tools
+
+When users access Kroo data through a [Kroo MCP](/kroo-mcp-setup) in tools like Claude, Copilot, or Gemini, their Kroo permissions carry over. Users only see the data they've been explicitly granted.
 
 ## Support
 

@@ -1,89 +1,130 @@
 ---
 title: "Row-Level Permissions"
-description: "Restrict what data Kris can access for specific user groups"
+description: "Control which tables and rows each user can see within a database"
 icon: "filter"
 ---
 
-<CardGroup cols={4}>
-  <Card title="Create Group" icon="users" />
-  <Card title="Add Members" icon="user-plus" />
-  <Card title="Set Filters" icon="filter" />
-  <Card title="Test & Launch" icon="rocket" />
-</CardGroup>
+<Info>
+This permissions model takes effect on **October 18, 2026**.
+</Info>
 
-Along with restricting access to an entire table, RLP also lets you filter a table down to specific rows — for example, only projects in a specific region, or only data for a specific company.
+Row-Level Permissions (RLP) control which tables, and which rows within those tables, each user can see in a database. RLP applies everywhere Kroo data is shown — the Data Viewer, Studio dashboards, Kris, and MCPs.
 
-RLP is organized around **groups**. A group defines a set of table access rules. Users assigned to a group inherit those rules.
+## Prerequisites
 
-<Tip>
-After configuring a new group, use **Test as User** in Kris AI Context Settings to confirm the filters are returning the expected results before launching RLP org wide!
-</Tip>
+- **Database Access** to the database at the [resource level](/permissions/resources), for users who need to see its data
+- **Data Warehouses** and **Row Level Permissions** [role features](/permissions/roles), for admins who configure RLP
+- A **Microsoft SQL** or **Microsoft Fabric** data destination
 
-## Table Access
+<Warning>
+Database Access alone does not show any data. Users must also belong to at least one RLP group that grants access to a table.
+</Warning>
 
-Each group can have access to one or more Kroo tables. For each table, you define a filter type:
+## Groups
+
+RLP is organized around **groups**. Each group defines which tables its members can see and which rows within each table. Roles and users are then assigned to the group.
+
+A user can belong to multiple groups — their effective access is the **union** of all their groups.
+
+<Frame>
+  <img
+    src="/images/permissions/rlp-groups.png"
+    alt="Row-Level Permissions page listing a Custom group and the Kroo Synced Admins group"
+  />
+</Frame>
+
+Groups have one of two origins:
+
+- **Custom** — groups you create and edit
+- **Kroo Synced** — groups managed by Kroo. **Admins (Kroo Managed)** is created automatically, contains all RLP admins, and grants access to every table. It can be viewed and duplicated but not edited.
+
+## Table access
+
+For each table in a group, choose a filter type:
 
 <Tabs>
   <Tab title="No Filter (Full Access)">
-    The user can see **all rows** in this table. Use this when the table doesn't contain sensitive data or when the user should have unrestricted access to it.
+    Members see **all rows** in this table. Use this when the table doesn't contain sensitive data or when members should have unrestricted access to it.
   </Tab>
   <Tab title="Conditions">
-    Build a row filter using the point-and-click condition builder. Multiple conditions can be combined.
+    Build a row filter with the point-and-click condition builder.
 
     | Field | Description |
     |-------|-------------|
-    | **Column** | Select the column to filter on (e.g., `project_id`, `company`, `region`) |
-    | **Operator** | Choose a comparison: `equals`, `not equals`, `contains`, `greater than`, `less than`, etc. |
-    | **Value** | Enter the value to match (e.g., `123`, `West`, `Active`) |
+    | **Column** | The column to filter on (e.g., `project_id`, `company`, `region`) |
+    | **Operator** | The comparison: `equals`, `not equals`, `contains`, `greater than`, `less than`, etc. |
+    | **Value** | The value to match (e.g., `123`, `West`, `Active`) |
 
     When multiple conditions are added, choose a logic mode:
 
     - **ALL conditions must match (AND)** — every condition must be true for a row to be visible
     - **ANY condition must match (OR)** — at least one condition must be true
 
-    **Example:** to restrict a user to only see Project ID 123 in the `kroo_procore.projects` table, set Column = `project_id`, Operator = `equals`, Value = `123`.
-
-    Click **+ Add Condition** to add more conditions. Click **Remove** to delete a condition. Click **Save Filter** when done.
+    **Example:** to restrict members to Project ID 123 in the `kroo_procore.projects` table, set Column = `project_id`, Operator = `equals`, Value = `123`.
   </Tab>
   <Tab title="Raw SQL">
-    Write a custom SQL `WHERE` clause for advanced filtering. This is useful when conditions are complex or need to reference other columns dynamically. The clause is applied as a `WHERE` filter against the table before Kris queries it.
+    Write a custom SQL `WHERE` clause for advanced filtering — useful when conditions are complex or need to reference other columns dynamically.
 
     ```sql
     region = 'West' AND status != 'Closed'
     ```
-
   </Tab>
 </Tabs>
 
 <Info>
-Use the **Explore Table Data** link to preview the table's columns and sample rows before building your filter.
+Use **Preview Table Data** to see the table's columns and sample rows before building your filter.
 </Info>
 
-## Members
-
-Each group has a members list. Add users to the group to apply the group's table access rules to them.
-
-A user can belong to **multiple groups** — their effective access is the union of all groups they belong to.
-
-## Creating a Group
+## Creating a group
 
 <Steps>
-<Step title="Navigate to Row-Level Permissions">
-  Go to [**Settings > Permissions > Row-Level Permissions**](https://app.getkroo.com/settings?tab=permissions).
+<Step title="Open Row-Level Permissions">
+  In **Database Access**, select **Row-level permissions** on the database you want to configure, then click **Create group**.
 </Step>
 
-<Step title="Create a new group">
-  Click **New Group** and give it a descriptive name (e.g., "West Region PMs" or "Subcontractor – Acme").
+<Step title="Name and describe the group">
+  Enter a **Group name** (e.g., "West Region PMs" or "Subcontractor – Acme") and an optional **Description**, then click **Continue to logic**.
+
+  <Frame>
+    <img
+      src="/images/permissions/rlp-new-group.png"
+      alt="New group wizard on the Table and Row Logic step with no tables added"
+    />
+  </Frame>
 </Step>
 
-<Step title="Add members">
-  Add users to the group. See the [Members](#members) section above for details.
+<Step title="Add tables">
+  Click **Add Table**, select the tables to grant access to, and click **Add**. You can add up to 100 tables at a time.
+
+  <Frame>
+    <img
+      src="/images/permissions/rlp-add-tables.png"
+      alt="Table Access picker with schema filters and one table selected"
+    />
+  </Frame>
+
+  <Warning>
+  Newly added tables grant **full access** until you configure a row filter.
+  </Warning>
 </Step>
 
-<Step title="Configure table access">
-  Add one or more Kroo tables and define the filter rules for each. See [Table Access](#table-access) above.
+<Step title="Set row filters">
+  Expand each table with the chevron next to its name, choose a [filter type](#table-access), and click **Save Filter**. Save each filter before continuing, then click **Continue to role access**.
+
+  <Frame>
+    <img
+      src="/images/permissions/rlp-filter.png"
+      alt="Conditions filter on a table where user_type equals 3"
+    />
+  </Frame>
+</Step>
+
+<Step title="Assign roles and users">
+  In the access pane, choose which roles and users belong to the group. See [Granting access](/permissions/resources#granting-access) for how role assignments work.
 </Step>
 </Steps>
+
+Groups can be edited later from the Row-Level Permissions page. To check a group's filters from a member's point of view, use **Test as User** in Kris AI Context Settings.
 
 ## Support
 

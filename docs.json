@@ -63,7 +63,8 @@
             "group": "Permissions",
             "pages": [
               "permissions/overview",
-              "permissions/access-control",
+              "permissions/roles",
+              "permissions/resources",
               "permissions/row-level-permissions"
             ]
           },
@@ -136,6 +137,12 @@
       ]
     }
   },
+  "redirects": [
+    {
+      "source": "/permissions/access-control",
+      "destination": "/permissions/roles"
+    }
+  ],
   "logo": {
     "light": "https://dkq5g4kc673o0.cloudfront.net/Kroo%20Logo",
     "dark": "https://dkq5g4kc673o0.cloudfront.net/Kroo%20Logo"

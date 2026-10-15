@@ -1,0 +1,48 @@
+---
+title: "Resources"
+description: "Grant access to specific dashboards, projects, and databases"
+icon: "folder-tree"
+---
+
+<Info>
+This permissions model takes effect on **October 18, 2026**.
+</Info>
+
+Resources are the parts of Kroo that are unique to your company — your dashboards, projects, and databases. Resource permissions are managed within each tool, so you can grant access item by item to roles or individual users.
+
+## Resource types
+
+- **Dashboards** — Kroo Studio dashboards and embedded Power BI dashboards
+- **Kroo Projects**
+- **Database Access** — including [Row-Level Permissions](/permissions/row-level-permissions)
+
+<Warning>
+Users need **Database Access** on a database, plus membership in a Row-Level Permissions group, to see any of its data in Kroo — including in the Data Viewer, Studio, Kris, and MCPs.
+</Warning>
+
+## Access levels
+
+| Level | Name | What it grants |
+|-------|------|----------------|
+| **0** | Cannot view | No access |
+| **1** | Can view | Open and view the item |
+| **2** | Can edit | View and edit the item |
+| **3** | Can manage access | Edit, plus grant other roles and users access |
+
+## Granting access
+
+Each resource has a **Manage access** pane that opens from the right. Use the **Roles** tab to set a level for each role, or the **Users** tab to set a level for an individual user. Changes take effect immediately.
+
+<Frame>
+  <img
+    src="/images/permissions/manage-access-pane.png"
+    alt="Manage access pane showing the 0 to 3 access levels for each role in the hierarchy"
+  />
+</Frame>
+
+- **Access flows up the hierarchy.** Giving a role access also gives access to its parent roles. Removing a child role's access does not affect its parents.
+- **Highest level wins.** A user may get access to the same resource directly and through several roles. Their effective access is the highest of those levels.
+
+## Support
+
+For help configuring resource access, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
