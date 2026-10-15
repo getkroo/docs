@@ -16,38 +16,13 @@ Kroo's enhanced permissions empowers your company with granular control over use
 - Kris
 - MCPs
 
-Permissions are managed in three layers. A user's effective access is the **union** of everything granted through all three.
+Permissions are primarily managed through two methods:
 
-<CardGroup cols={3}>
-  <Card title="Roles" icon="user-shield" href="/permissions/roles">
-    Managed centrally in Settings. Grant access to Kroo features and to configuring Connections.
-  </Card>
-  <Card title="Resources" icon="folder-tree" href="/permissions/resources">
-    Managed within each tool. Grant access to specific dashboards, projects, and databases.
-  </Card>
-  <Card title="Row-Level Permissions" icon="filter" href="/permissions/row-level-permissions">
-    Control which tables and rows each user can see within a database.
-  </Card>
-</CardGroup>
+1. **[Roles](/permissions/roles)**
+2. **[Resources](/permissions/resources)**
 
-## How the layers fit together
+<Info>
+**Note**: Row Level Permissions are used to govern underlying data access. See **[Row Level Permissions](/permissions/row-level-permissions)** for more detail.
+</Info>
 
-- **Roles** decide which parts of Kroo a user can open and administer, and which data connectors they can configure.
-- **Resources** decide which specific items — a Studio dashboard, an embedded Power BI dashboard, a project, a database — a user can view, edit, or manage access to.
-- **Row-Level Permissions (RLP)** decide which tables and rows a user can see once they're inside a database. RLP applies everywhere Kroo data is shown, not only in Kris.
-
-<Warning>
-Granting a role access to a **Connection** or to **Data Warehouses** settings does not give a user access to the underlying data. Data access requires **Database Access** at the resource level **and** membership in a Row-Level Permissions group.
-</Warning>
-
-## Owners
-
-The **Owner** is the top of the role hierarchy and has access to everything in Kroo. Owners can only be designated by the Kroo team at your company's direction. See [Structuring roles](/permissions/roles#structuring-roles).
-
-## MCP and external AI tools
-
-When users access Kroo data through a [Kroo MCP](/kroo-mcp-setup) in tools like Claude, Copilot, or Gemini, their Kroo permissions carry over. Users only see the data they've been explicitly granted.
-
-## Support
-
-For help configuring permissions, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
+**Roles** are managed centrally within Settings and govern access to Kroo features as well as the ability to view and configure Connections. Connections are your company's specific data connectors. **Resources** are a way to manage permissions for dynamic, customer specific areas of the Kroo platform. Resource permissions are managed within their respective tools. **Row Level Permissions** (RLP) is a managed resource that governs user access to specific tables and rows within a database. A user's effective access is the union of everything granted through all three.

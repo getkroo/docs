@@ -8,71 +8,71 @@ icon: "user-shield"
 This permissions model takes effect on **October 18, 2026**. Before then, Kroo has only two user types: **Admins** and **Non-Admins**.
 </Info>
 
-Roles are the primary way to manage permissions in Kroo. Each role grants access to Kroo **Features** and to individual **Connections**, and is then assigned to users. A user can have multiple roles.
+Roles are the primary way that permissions are managed within the Kroo platform. They are configured to give visibility and administrative rights to the various native functions of Kroo. Once created, roles are then assigned to individual users granting them access. Users can have multiple roles depending on how you choose to configure them.
+
+Roles grant access to **Features** of the Kroo Platform as well as to individual **Connections**.
 
 ## Features
 
-<Tabs>
-  <Tab title="Administration">
-    | Feature | What it grants |
-    |---------|----------------|
-    | **Role Management** | Configure roles for users. Users can only manage permissions and users at or below their own level of access. |
-    | **SSO** | Configure [Single Sign-On](/sso-setup) so users sign in with their existing company credentials. |
-    | **Membership** | Add or remove users from Kroo. |
-    | **API Clients** | View, create, and delete company API credentials, and regenerate confidential-client secrets. |
-  </Tab>
-  <Tab title="AI Tools">
-    | Feature | What it grants |
-    |---------|----------------|
-    | **Kris** | Use [Kris](/meet-kris), Kroo's AI assistant. Requires access to at least one data warehouse and query permissions. |
-    | **Kris › Administration** | View Kris usage. |
-    | **Kris › Context** | Manage company-wide context fed to Kris. |
-    | **Kris › Document** | Connect external [document sources](/document-sources), such as SharePoint. |
-    | **Kris › Prompts** | Manage company-wide sample prompts. |
-    | **Kris › Tables** | Toggle **Include in AI Enterprise Search** per table in the Data Dictionary. Tables are included by default; excluded tables are still available to Kris and MCPs, but deprioritized. |
-    | **MCP** | Configure [Kroo MCPs](/kroo-mcp-setup) and connect external AI tools such as Claude or Microsoft Copilot. |
-  </Tab>
-  <Tab title="Data">
-    | Feature | What it grants |
-    |---------|----------------|
-    | **Data Dictionary** | View the catalog of tables and columns, including the descriptions that give Kris context. |
-    | **Data Viewer** | Query accessible tables using prebuilt and custom SQL in the [Data Viewer](/data-viewer). |
-    | **Data Warehouses** \* | Access settings for Kroo-synced and company-managed data warehouses. Does not grant data access. |
-    | **Power BI Dashboard** \* | [Embed](/embed-dashboards) and administer Power BI dashboards in Kroo. |
-    | **Projects** \* | Manage construction projects synced from external systems, used for dashboard filters and schedule assignment. |
-    | **Row Level Permissions** \* | Manage [Row-Level Permissions](/permissions/row-level-permissions). Also requires **Data Warehouses**. Only needed to manage RLP. |
-    | **Studio** \* | Access, build, and administer Kroo Studio dashboards. What each user sees in a visual is still limited by their data access. |
+### Administration
 
-    <Info>
-    \* These features are also managed as [Resources](/permissions/resources), which let you grant access to individual dashboards, projects, and databases per role or per user.
-    </Info>
-  </Tab>
-</Tabs>
+- **Role Management**: Where roles are configured for users. If a user is given access, they can only manage permissions and users that have less than or equal to their existing permissions.
+- **SSO**: Single Sign-On allows a company's users to access the Kroo platform using their existing sign-in credentials and comply with their company's security requirements.
+- **Membership**: Where users can be added or removed from the Kroo Platform
+- **API Clients**: This is where company API credentials are managed. Users with access can view, create and delete API credentials and regenerate confidential-client secrets.
+
+### AI Tools
+
+- **Kris**: Kroo's AI assistant for questions about company data. Requires access to at least one data warehouse and query permissions.
+  - **Administration**: Allows users to view usage of the Kris function.
+  - **Context**: Allows users to manage company-wide context that is fed to Kris. When used correctly, this will improve the company-wide Kris experience.
+  - **Document**: Enables users to connect external document sources such as SharePoint providing Kris with an even richer dataset.
+  - **Prompts**: Allows users to manage prompts for company wide usage. These help users who are less familiar with AI explore sample questions that Kris can provide answers to.
+  - **Tables**: This feature allows users to go into the Data Dictionary and for each table enable/disable a toggle to `Include in AI Enterprise Search`. All tables in the Data Viewer have this toggled on by default. When disabled, Kris and other MCP enabled AI features still have access to that table but it is deprioritized for the agent.
+- **MCP**: MCP stands for Model Context Protocol. Put simply it is a standard that allows AI platforms such as Claude or Microsoft Copilot to connect to your Kroo Data. Granting this permission will allow users to configure Kroo MCPs and connect external AI tools to Kroo.
+
+<Info>
+**Note**: When users access Kroo Data through a Kroo MCP, their role access is inherited through that MCP. What this means is that users can view Kroo data in external tools such as Claude, Copilot, Gemini, or others and Kroo permissions are maintained. Those users will still only see data that they have been given explicit permission to view.
+</Info>
+
+### Data
+
+- **Data Dictionary**: This is the catalog of all tables and columns within your instance of Kroo. Table and field level descriptions provide vital context to AI agents such as Kris so that responses are actionable, having been tailored to the way your company uses that table or field.
+- **Data Viewer**: Allows users to query the data tables that they have access to using prebuilt and customizable SQL queries.
+- **Data Warehouses\***: This gives access to the Kroo settings for Kroo-synced and company-managed data warehouses. Warehouse settings are independent of data access. Data access is granted through Row Level Permissions groups.
+- **Power BI Dashboard\***: Grants users the ability to embed and administer independently built Power BI dashboards within the Kroo platform.
+- **Projects\***: Allows users to manage construction projects synced from external systems. This field is primarily used for dashboard filters and project schedule assignment.
+- **Row Level Permissions\***: (RLP) This functionality requires permissions to Data Warehouses to administer. Row level permissions controls which tables and rows each member can see within the data warehouse. This permission is only needed to manage RLP.
+- **Studio\***: Kroo Studio allows users to access, build and administer dashboards within the Kroo platform based upon your data. After a user is granted studio permissions, their access to visuals is further limited based upon their global Kroo permissions to access certain datasets.
+
+<Warning>
+**Note**: Database Access at the Resource Level is explicitly needed for users to be able to view items within the Kroo app such as the Data Viewer.
+</Warning>
+
+<Warning>
+**\* Note**: Each of these Kroo features are managed within Roles **AND** within [Resources](/permissions/resources). Resources enable admins further granularity when granting access to unique elements in your Kroo instance for groups and individual users.
+</Warning>
 
 ## Connections
 
-Connections are your company's data connectors. For each connection, a role can be granted one of three levels:
+Connections represent all your connected data sources. For each, users' access is broken out into 3 Levels:
 
-| Level | What it grants |
-|-------|----------------|
-| **Read** | View pipeline analytics and configuration |
-| **Configure** | Read, plus configure modules inside the connector |
-| **Manage** | Configure, plus manage connector details |
+1. **Read**: Read pipeline analytics and configuration.
+2. **Configure**: Read and configure modules inside this connector.
+3. **Manage**: Manage connector details and configure its modules.
 
-<Warning>
-Connection access lets users configure a pipeline, but does not let them see its data. Data access is managed through [Database Access and Row-Level Permissions](/permissions/row-level-permissions).
-</Warning>
+<Info>
+**Note**: Granting role permissions to Connections allows users to configure those pipeline connectors but has no impact on a user's ability to utilize the data from that connector. That access is managed via Data Warehouses and Row Level Permissions.
+</Info>
 
-## Structuring roles
+## Structuring Roles
 
-Roles form a hierarchy:
+Roles are created within a hierarchy. The highest level of the hierarchy is the system Owner which has access to everything within the Kroo platform. Owners can only be designated by the Kroo team at the direction of the customer.
 
-- The **Owner** sits at the top and has access to everything. Owners can only be designated by the Kroo team at your company's direction.
-- Owners create higher-level roles first, then child roles beneath them.
-- A child role's permissions are chosen from its parent's — a child can never have more access than its parent.
+The owner(s) will then set up roles in hierarchical branches. Branches are created for the higher level roles first and then each subsequent role will have reduced permissions until you get down to the lowest level.
 
-When a user has multiple roles that grant different levels of access to the same feature or connection, the **highest level wins**. All of a user's roles combine into a single set of permissions.
+At each level, a child role's available permissions are selected from the parent role's available permissions. As a result, each child role can only be granted permissions up to its parent role. In this way, Kroo roles are reductive where each lower tiered role will have reduced permissions.
 
-## Support
-
-For help configuring roles, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
+<Info>
+Users can be assigned multiple roles granting them access to various features and connections. If two different assigned roles conflict with each other, the role granting the higher level access for a given feature or connection will preside. In this way, a user's roles unify into a single set of permissions.
+</Info>
