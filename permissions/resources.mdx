@@ -8,7 +8,7 @@ icon: "folder-tree"
 This permissions model takes effect on **October 18, 2026**. Before then, Kroo has only two user types: **Admins** and **Non-Admins**.
 </Info>
 
-Resources are a collection of Kroo platform tools that are unique to each customer. Resultantly, these permissions are handled slightly differently than Features and Connections as they require further granularity. Resources include:
+Resources are customer-specific areas of the Kroo platform that need more granular access control than global feature permissions. Resources include:
 
 - Dashboards
   - Studio Dashboards
@@ -18,7 +18,7 @@ Resources are a collection of Kroo platform tools that are unique to each custom
   - [Row Level Permissions](/permissions/row-level-permissions)
 
 <Info>
-Resource permissions must be given to users/groups so that they have access to Kroo data. This is essential for them to be able to interact with Kroo's tools and features. To enable this access Row-level Permissions must be configured and granted to groups and users.
+Resource permissions must be granted to users or groups so they can access Kroo data. This access is essential for using Kroo's tools and features. Row Level Permissions must also be configured and granted to groups and users where row-level data access is required.
 </Info>
 
 Each of these areas of the platform can be assigned by group or by user within the Resource Access Pane that opens from the right:
@@ -31,13 +31,13 @@ Each of these areas of the platform can be assigned by group or by user within t
   />
 </Frame>
 
-Resource levels are View, Create and Admin. View opens a granted item, Create makes new ones, and Admin grants access to every item of that type. Broken out these options are:
+Resources have four access levels:
 
-- 0 - Cannot View
-- 1 - Can View
-- 2 - Can Edit
-- 3 - Can Manage Access
+- **0 - Cannot View**: No access granted.
+- **1 - Can View**: Users can open and view a granted item.
+- **2 - Can Edit**: Users can edit items they are added to.
+- **3 - Can Manage Access**: Users can manage permissions for an item.
 
 <Info>
-Within a resource, a single user's access could be applied at the user level as well as at any number of roles that user has been assigned to which may also have an assignment to that resource. In the event of a conflict between these assignments, a user's resulting access will be defined by the highest level from those assignments for a given feature or connection.
+Within a resource, a user's access can be granted directly at the user level and through any roles assigned to that user. If these assignments conflict, the user receives the highest access level granted for that feature or connection.
 </Info>

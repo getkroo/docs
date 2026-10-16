@@ -8,17 +8,19 @@ icon: "filter"
 This permissions model takes effect on **October 18, 2026**. Before then, Kroo has only two user types: **Admins** and **Non-Admins**.
 </Info>
 
-Both **Database Access** and **Row Level Permissions** are managed using the [Resource Access Pane](/permissions/resources). Databases are where your connection data lives once it is brought into Kroo. Databases can be managed in one of 3 configurations:
+Both **Database Access** and **Row Level Permissions** are managed using the [Resource Access Pane](/permissions/resources). Databases are where connection data lives once it is brought into Kroo. Databases can be managed in one of three configurations:
 
-1. Kroo hosted Data Warehouse
-2. Client hosted Data Warehouse
-3. Multiple client hosted Data Warehouses
+1. Kroo-hosted Data Warehouse
+2. Client-hosted Data Warehouse
+3. Multiple client-hosted Data Warehouses
 
 <Info>
-Kroo supports connection to a wide variety of Data Destination Platforms. Currently, only Microsoft SQL and Microsoft Fabric data destinations are compatible with Kroo's Row Level Permissions capabilities.
+Kroo supports connections to a wide variety of data destination platforms. Currently, only Microsoft SQL and Microsoft Fabric data destinations are compatible with Kroo's Row Level Permissions capabilities.
 </Info>
 
-Data brought into the Kroo platform may be sensitive in nature such as financial or performance management data. Managing the Database Access at the resource level will control that database's user/group specific visibility within the Kroo app. Row Level Permissions are then used to control which database tables and rows a user sees within the database itself. RLP is needed for users to view data even if Data Warehouse access is granted at the resource level. To configure RLP (row level permissions), select `Row-level permissions` in the desired database. This will open the Row Level Permissions window:
+Data brought into the Kroo platform may be sensitive, including financial or performance management data. Managing Database Access at the Resource level controls user and group visibility within the Kroo app. Row Level Permissions then control which database tables and rows a user can see within the database itself. RLP is required for users to view data, even if Data Warehouse access is granted at the Resource level.
+
+To configure RLP, select `Row-level permissions` in the desired database. This opens the Row Level Permissions window:
 
 <Frame>
   <img
@@ -27,9 +29,9 @@ Data brought into the Kroo platform may be sensitive in nature such as financial
   />
 </Frame>
 
-Row Level Permissions are managed in groups. To create a new group, simply select **+ Create Group**. In the New Group window, enter a `Group name`, a `Description (optional)` and select **Continue to logic**.
+Row Level Permissions are managed in groups. To create a new group, select **+ Create Group**. In the New Group window, enter a `Group name`, add an optional `Description`, and select **Continue to logic**.
 
-In the following window, you can select which tables to include in the group and rules that govern their visibility. To do so select `+ Add Table`.
+In the following window, select which tables to include in the group and define the rules that govern their visibility. To do so, select `+ Add Table`.
 
 <Frame>
   <img
@@ -38,7 +40,7 @@ In the following window, you can select which tables to include in the group and
   />
 </Frame>
 
-Then select the Table(s) you would like to grant access to and select `Add table(s)`:
+Then select the table or tables you would like to grant access to and select `Add table(s)`:
 
 <Frame>
   <img
@@ -47,13 +49,13 @@ Then select the Table(s) you would like to grant access to and select `Add table
   />
 </Frame>
 
-Then expand your selected table(s) out by clicking the chevron next to the table name and select your desired filter type. Options are:
+Expand your selected table or tables by clicking the chevron next to the table name, then select your desired filter type. Options are:
 
 - No filter (full access)
 - Conditions
 - Raw SQL
 
-Define your preferred Filter(s) if applicable, select `Save Filter` and then `Continue to role access`.
+Define your preferred filter, if applicable, then select `Save Filter` and `Continue to role access`.
 
 <Frame>
   <img
@@ -62,7 +64,7 @@ Define your preferred Filter(s) if applicable, select `Save Filter` and then `Co
   />
 </Frame>
 
-At this point you will be brought to the Resource Access Pane where you can set which specific roles and/or which specific users should be included in this group of Row Level Permissions. Row Level Permissions can be revised and edited in the future from the Row Level Permissions window.
+You will then be brought to the Resource Access Pane, where you can set which roles and users should be included in this Row Level Permissions group. RLP can be revised and edited later from the Row Level Permissions window.
 
 ## Filter types
 

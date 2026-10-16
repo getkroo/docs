@@ -8,9 +8,9 @@ icon: "shield-halved"
 This permissions model takes effect on **October 18, 2026**. Before then, Kroo has only two user types: **Admins** and **Non-Admins**.
 </Info>
 
-Kroo's enhanced permissions empowers your company with granular control over user access, making it easier (and clearer) than ever to manage who can use and see specific features. The combined simplicity and granularity of these permissions allows organizations to truly operationalize and democratize their data. When setup correctly, each user will have free rein over their appropriately configured suite of Kroo enabled tools and features, and only for the appropriate scope of data. These features can include:
+Kroo's permissions system gives organizations precise control over who can access each feature, tool, and dataset. It is designed to make data access easier to manage without sacrificing governance. When set up correctly, users can work confidently in the Kroo tools and data they are authorized to use, and only within the right scope of access. These features can include:
 
-- Kroo Studio dashboards
+- Kroo Studio Dashboards
 - Data Viewer
 - Data Dictionary
 - Kris
@@ -22,7 +22,7 @@ Permissions are primarily managed through two methods:
 2. **[Resources](/permissions/resources)**
 
 <Info>
-**Note**: Row Level Permissions are used to govern underlying data access. See **[Row Level Permissions](/permissions/row-level-permissions)** for more detail.
+**Note**: Row Level Permissions govern underlying data access. See **[Row Level Permissions](/permissions/row-level-permissions)** for more detail.
 </Info>
 
-**Roles** are managed centrally within Settings and govern access to Kroo features as well as the ability to view and configure Connections. Connections are your company's specific data connectors. **Resources** are a way to manage permissions for dynamic, customer specific areas of the Kroo platform. Resource permissions are managed within their respective tools. **Row Level Permissions** (RLP) is a managed resource that governs user access to specific tables and rows within a database. A user's effective access is the union of everything granted through all three.
+**Roles** are managed centrally in Settings. They control access to Kroo features and determine who can view or configure Connections, which are your organization's connected data sources. **Resources** control access to dynamic, customer-specific areas of the Kroo platform. Resource permissions are managed within the tool or dataset they apply to. A user's effective access combines their Role and Resource permissions.
