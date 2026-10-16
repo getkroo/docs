@@ -1,24 +1,28 @@
 ---
 title: "Permissions Overview"
-description: "Control who can access what data in Kroo"
+description: "Control who can use which Kroo features and see which data"
 icon: "shield-halved"
 ---
 
-Kroo provides two layers of permissions to help you control data access across your organization. Use them together or independently depending on your security requirements.
-
-<CardGroup cols={2}>
-  <Card title="Access Control" icon="key" href="/permissions/access-control">
-    Control which data warehouses a user can query and which integrations they can see.
-  </Card>
-  <Card title="Row-Level Permissions" icon="filter" href="/permissions/row-level-permissions">
-    Filter what data Kris can access per user group — like limiting visibility to only their projects or hiding sensitive tables entirely.
-  </Card>
-</CardGroup>
-
 <Info>
-**Admin users** bypass all permission restrictions and have full, unrestricted access to every destination, integration, and table in Kroo.
+This permissions model takes effect on **October 18, 2026**. Before then, Kroo has only two user types: **Admins** and **Non-Admins**.
 </Info>
 
-## Support
+Kroo's permissions system gives organizations precise control over who can access each feature, tool, and dataset. It is designed to make data access easier to manage without sacrificing governance. When set up correctly, users can work confidently in the Kroo tools and data they are authorized to use, and only within the right scope of access. These features can include:
 
-For help configuring permissions, contact [implementations@getkroo.com](mailto:implementations@getkroo.com).
+- Kroo Studio Dashboards
+- Data Viewer
+- Data Dictionary
+- Kris
+- MCPs
+
+Permissions are primarily managed through two methods:
+
+1. **[Roles](/permissions/roles)**
+2. **[Resources](/permissions/resources)**
+
+<Info>
+**Note**: Row Level Permissions govern underlying data access. See **[Row Level Permissions (within Database Access)](/permissions/row-level-permissions)** for more detail.
+</Info>
+
+**Roles** are managed centrally in Settings. They control access to Kroo features and determine who can view or configure Connections, which are your organization's connected data sources. **Resources** control access to dynamic, customer-specific areas of the Kroo platform. Resource permissions are managed within the tool or dataset they apply to. A user's effective access combines their Role and Resource permissions.
