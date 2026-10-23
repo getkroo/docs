@@ -17,22 +17,22 @@ Resources are customer-specific areas of the Kroo platform that need more granul
 Resource permissions must be granted to users or roles so they can access Kroo data. This access is essential for using Kroo's tools and features. Row Level Permissions must also be configured and granted to roles and users where row-level data access is required.
 </Info>
 
-Each of these areas of the platform can be assigned by role or by user within the Resource Access Pane that opens from the right:
+Each of these areas of the platform can be assigned by role or by user within the **Manage Permissions** drawer that opens from the right. Use the **Roles** or **Users** tab to choose who receives access:
 
 <Frame>
   <img
     src="/images/permissions/manage-access-pane.png"
-    alt="Manage access pane showing the 0 to 3 access levels for each role in the hierarchy"
+    alt="Manage Permissions drawer showing Cannot access, Can access, Can edit, and Can manage access for each role in the hierarchy"
     style={{ width: "75%" }}
   />
 </Frame>
 
 Resources have four access levels:
 
-- **0 - Cannot View**: No access granted.
-- **1 - Can View**: Users can open and view a granted item.
-- **2 - Can Edit**: Users can edit items they are added to.
-- **3 - Can Manage Access**: Users can manage permissions for an item.
+- **0 - Cannot access**: No access granted.
+- **1 - Can access**: Users can access a granted resource, subject to their feature permissions and any applicable Row Level Permissions.
+- **2 - Can edit**: Users can edit items they are added to.
+- **3 - Can manage access**: Users can manage permissions for an item.
 
 <Info>
 Within a resource, a user's access can be granted directly at the user level and through any roles assigned to that user. If these assignments conflict, the user receives the highest access level granted for that feature or connection.
