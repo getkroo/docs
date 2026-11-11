@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **Mintlify documentation site** for Kroo, a construction data platform that ingests, normalizes, and flattens project data from multiple sources into ready-to-use tables. The documentation covers data modeling methodology, API sync processes, and usage guides.
+This is a **Mintlify documentation site** for the Kroo API. Kroo is a construction data platform that ingests, normalizes, and flattens project data from multiple sources into ready-to-use tables. This site contains **API documentation only** — all product, guide, and admin documentation lives in a separate knowledge base, so do not add non-API pages here.
 
 ## Development Commands
 
@@ -29,8 +29,8 @@ mint broken-links
 ## Architecture & Structure
 
 ### Content Organization
-- **Main documentation files**: `.mdx` files in root directory
-- **Assets**: Images in `/images/`, logos in `/logo/`
+- **Guide pages**: `.mdx` files in root directory (currently `pipeline-status.mdx`)
+- **API reference pages**: generated from the OpenAPI spec at `https://api.getkroo.com/api/v3/openapi.yaml`; `.mdx` overrides live in `/api-reference/`
 
 ### Key Configuration Files
 - `docs.json`: Mintlify configuration with navigation, theming, and site structure
@@ -38,10 +38,11 @@ mint broken-links
 - `.gitignore`: Git ignore patterns
 
 ### Documentation Structure
-The site uses a 3-tab navigation organized by user intent:
-- **Platform** tab: Overview (Welcome, Methodology, Meet Kris), Data Lifecycle (Record Deletion, Table Snapshots, Historical Backfill), Two-Way Sync (Summary, ACC RFIs, ACC Submittals)
-- **Guides** tab: Using the App (Pipeline Analytics, Embed Dashboards, Sync Schedule, Analytics Modules, Prompting Guidelines), Analytics (SQL Views & Basics, Data Viewer), Permissions, Integrations (P6/OPC File Uploads, Pipeline Status & PowerBI)
-- **Admin & Support** tab: Setup (Kris Teams Bot, Kroo MCP Setup, Windows Desktop App), Maintenance (Manual Data Refresh, Sage On-Prem Troubleshooting)
+The site has a single **API Reference** tab:
+- **Guides**: Pipeline Status Monitoring (`pipeline-status.mdx`) — task-oriented guide to the v3 Sync Status API, PowerBI setup, and the legacy v1 Pipeline Status API
+- **Authentication**: `POST /oauth/token`
+- **Sync Status**: `GET /sync_status`
+- **Schedule Files**: list, upload, get, and delete schedule files
 
 ### Content Patterns
 - All content files use `.mdx` format (MDX = Markdown + JSX)
@@ -138,7 +139,7 @@ The API returns timestamps in ISO 8601 format with timezone information, which P
 
 ## Page Style Guide
 
-All documentation pages should follow a consistent structure and use Mintlify components uniformly. Reference `kris-teams-bot.mdx` as the canonical example.
+All documentation pages should follow a consistent structure and use Mintlify components uniformly.
 
 ### Frontmatter
 - Always include `title`, `description`, and `icon`

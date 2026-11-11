@@ -11,98 +11,15 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Platform",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": [
-              "index",
-              "methodology",
-              "meet-kris"
-            ]
-          },
-          {
-            "group": "Data Lifecycle",
-            "pages": [
-              "record-deletion",
-              "table-snapshots",
-              "historical-backfill"
-            ]
-          },
-          {
-            "group": "Two-Way Sync",
-            "pages": [
-              "two-way-sync-summary",
-              "acc-rfi-sync",
-              "acc-submittal-sync"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Using the App",
-            "pages": [
-              "pipeline-analytics",
-              "embed-dashboards",
-              "sync-schedule",
-              "analytics-modules",
-              "prompting-guidelines"
-            ]
-          },
-          {
-            "group": "Analytics",
-            "pages": [
-              "sql-views-and-basics",
-              "data-viewer"
-            ]
-          },
-          {
-            "group": "Permissions",
-            "pages": [
-              "permissions/overview",
-              "permissions/roles",
-              "permissions/resources",
-              "permissions/row-level-permissions"
-            ]
-          },
-          {
-            "group": "Integrations",
-            "pages": [
-              "p6-opc-file-uploads",
-              "pipeline-status"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Admin & Support",
-        "groups": [
-          {
-            "group": "Setup",
-            "pages": [
-              "sso-setup",
-              "kris-teams-bot",
-              "document-sources",
-              "kroo-mcp-setup",
-              "windows-desktop-app"
-            ]
-          },
-          {
-            "group": "Maintenance",
-            "pages": [
-              "manual-refresh",
-              "sage-on-prem-troubleshooting"
-            ]
-          }
-        ]
-      },
-      {
         "tab": "API Reference",
         "openapi": "https://api.getkroo.com/api/v3/openapi.yaml",
         "groups": [
+          {
+            "group": "Guides",
+            "pages": [
+              "pipeline-status"
+            ]
+          },
           {
             "group": "Authentication",
             "pages": [
@@ -126,46 +43,23 @@
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Support",
-          "icon": "envelope",
-          "href": "mailto:implementations@getkroo.com"
-        }
-      ]
-    }
+    ]
   },
-  "redirects": [
-    {
-      "source": "/permissions/access-control",
-      "destination": "/permissions/roles"
-    }
-  ],
   "logo": {
     "light": "https://dkq5g4kc673o0.cloudfront.net/Kroo%20Logo",
     "dark": "https://dkq5g4kc673o0.cloudfront.net/Kroo%20Logo"
   },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:implementations@getkroo.com"
-      }
-    ]
-  },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
